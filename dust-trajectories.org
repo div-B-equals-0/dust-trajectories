@@ -1,0 +1,18 @@
+* Dust trajectories in bow shocks
+This is an extension of the models I have done in ~dust-wave.org~ from the Jorge bow shock project. 
++ 1d and 3d models for the trajectories of charged dust grains under 3 forces
+  1. Radiation from a star
+  2. Gas-grain drag
+     - Stokes drag (solid body), important at supersonic relative speeds
+     - Coulomb drag, peaks at roughly 10 km/s for ionized gas
+  3. Lorentz force, couples grains to B-field
++ Main scenario considered is a stream of dusty plasma, incident on a star
+
+
+* Drag force
++ Functional form from Draine & Salpeter
++ Calibrated from Cloudy models
+  + Major contribution is from protons
+  + But does include the minor contribution from electrons and helium ions
++ Stokes drag (solid body)  
+
