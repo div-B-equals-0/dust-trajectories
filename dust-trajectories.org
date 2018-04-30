@@ -14,6 +14,8 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 + Calibrated from Cloudy models
   + Major contribution is from protons
   + But does include the minor contribution from electrons and helium ions
+  + Electrons fill in the minimum around 100 km/s
+  + Helium adds a shoulder to the peak around 5 km/s
 + Implemented in [[file:ds79.py]]
 ** Test drag force
 #+BEGIN_SRC python :results file :return pltfile
@@ -24,12 +26,12 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 
   pltfile = "test-Fdrag.pdf"
 
-  w = np.logspace(-1.0, 3.0, 200)
+  w = np.logspace(-1.5, 3.5, 200)
 
   fig, ax = plt.subplots()
 
-  for phi in 0.3, 1.0, 3.0, 10.0:
-      ax.plot(w, ds79.Fdrag(w, phi=phi), label=rf"$\phi = {phi:.1f}$")
+  for phi in 0.25, 1.0, 4.0, 16.0:
+      ax.plot(w, ds79.Fdrag(w, phi=phi), label=rf"$\phi = {phi:.2f}$")
   ax.legend()
   ax.set(
       xscale="log",
@@ -37,10 +39,13 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
       xlabel="Gas-grain velocity difference, $w$, km/s",
       ylabel=r"Drag force $/ (2 n k T) (\pi a^{2}) $",
   )
-
+  sns.despine()
+  fig.tight_layout()
   fig.savefig(pltfile)
 #+END_SRC
 
 #+RESULTS:
 [[file:test-Fdrag.pdf]]
 
+* On-axis 1d integration
++ As before, we normalize distances by the radiative turnaround radius
