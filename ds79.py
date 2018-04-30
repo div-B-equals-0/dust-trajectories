@@ -9,16 +9,23 @@ def _G0(s):
     return (s/G0_CONSTANT)*np.sqrt(1.0 + (G0_CONSTANT*s)**2)
 
 def _G2byG0(s):
-    "My improved approximation"
+    "My improved approximation to the ratio"
     return 1.0/(2.0 + s**2 + s**4)
 
-# Characteristic speed at 1e4 K
+# Thermal speed of proton at 1e4 K
 CHARACTERISTIC_SPEED = 12.8486
 COULOMB_LAMBDA = 20.0
 
 
 class Collider(object):
+    """
+    Different colliders that can exert drag force on the grains
+    """
     def __init__(self, name, A=1.0, Z=1.0, abun=1.0):
+        """
+        Each collider has atomic mass `A`, charge `Z`, and abundance
+        `abun` (by number, relative to protons)
+        """
         self.name = name
         self.A = A
         self.Z = Z
