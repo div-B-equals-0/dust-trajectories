@@ -25,6 +25,7 @@ class DustStream(object):
         self.drag_constant = (4.0/self.Qp)*(self.cs*self.taustar*self.kappa_d
                                             /(self.vinf*self.kappa))**2
         self.phi = phi
+        self.Rstarstar = 2*(self.kappa_d/self.kappa)*self.taustar*self.Rstar
          
 def dydt_1d(y, t, s):
     """
@@ -36,6 +37,9 @@ def dydt_1d(y, t, s):
     x, u = y
     dxdt = u
     w = (u + 1.0)*s.vinf
-    dudt = 0.5*(x**(-2) - s.drag_constant*ds79.Fdrag(w, s.T, s.phi))
+    dudt = total_accel(x, w, s)
     return [dxdt, dudt]
+
+def total_accel(x, w, s):
+    return 0.5*(x**(-2) - s.drag_constant*ds79.Fdrag(w, s.T, s.phi))
 
