@@ -66,7 +66,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   # Initial conditions
   y0 = [2.5, -1.0]
 
-  stream = ds.DustStream(vinf=78, phi=10.0, a=0.02, L4=1.0)
+  stream = ds.DustStream(vinf=20, phi=15.0, a=0.04, L4=0.63, n=1.0e-1)
 
   # Time grid
   t = np.linspace(0.0, 10.0, 501)
@@ -143,3 +143,14 @@ python test-stream-1d.py
 
 #+RESULTS:
 [[file:test-stream-1d.pdf]]
+** Initial impressions
++ There are at least 4 parameters:
+  + L4, v, n, a
+  + [ ] In principle \phi should be determined self-consistently
+  + Everything else is minor: \rho_d, Q_p
++ For v_\infty in range 11 \to 80 km/s, we get the limit cycle behavior:
+  + Dust is swept in past R_{** }and follows drift velocity
+  + Gets turned around and shoots out
+    + For v ~ 20 km/s we can go out at twice velocity that we came in, so that w = 60 km/s since that is right in the middle of the trough in the drag force
+  + Decelerated by electron drag while w is of order 2 v_\infty
+  + Sudden deceleration and total re-coupling by proton drag when w falls to about 20 km/s 

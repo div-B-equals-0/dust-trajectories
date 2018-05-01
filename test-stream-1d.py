@@ -10,7 +10,7 @@ figfile = sys.argv[0].replace('.py', '.pdf')
 # Initial conditions
 y0 = [2.5, -1.0]
 
-stream = ds.DustStream(vinf=78, phi=10.0, a=0.02, L4=1.0)
+stream = ds.DustStream(vinf=20, phi=15.0, a=0.04, L4=0.63, n=1.0e-1)
 
 # Time grid
 t = np.linspace(0.0, 10.0, 501)
