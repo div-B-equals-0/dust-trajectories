@@ -83,6 +83,12 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
       "MS40": 22.2,
       "BSG": 30.2,
   }
+  eta = {
+      "MS10": 0.0066,
+      "MS20": 0.1199,
+      "MS40": 0.4468,
+      "BSG": 0.3079,
+  }
 
 
   # Set minor parameters according to star and grain type
@@ -114,7 +120,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   y0 = [Rstart, -1.0]
 
   stream = ds.DustStream(L4=L4[STAR], vinf=VINF, n=10**LOGN, a=A,
-                         T=Tgas[STAR], phi_norm=phi_norm, rho_d=rho_d)
+                         eta=eta[STAR], T=Tgas[STAR], phi_norm=phi_norm, rho_d=rho_d)
 
   streamid = f"{STAR}-v{int(VINF):03d}-n{int(10*LOGN):+02d}-{GRAIN}{int(100*A):03d}"
 
@@ -131,7 +137,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   # wdrift = 1.0 / alpha / soln[:, 0]
 
   sns.set_style('ticks')
-  sns.set_color_codes('dark')
+  sns.set_color_codes('deep')
   fig, (ax, axp) = plt.subplots(2, 1, figsize=(4, 6))
   ax.plot(t - t0, soln[:, 0], label='$R/R_{0}$', zorder=3, lw=0.5)
   ax.plot(t - t0, soln[:, 1], label='$v / v_{\infty}$', lw=0.5)
@@ -146,7 +152,9 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   )
   t2 = np.linspace(0.0, 20.0, 201)
 
-  x1, x2 = 0.008, 5.0
+  R1, R2 = 2e-4, 20.0
+
+  x1, x2 = R1/stream.Rstarstar, R2/stream.Rstarstar
   w1, w2 = 0.03/stream.vinf, 500.0/stream.vinf
 
   xpts = np.logspace(np.log10(x1), np.log10(x2), 151)
@@ -164,17 +172,19 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   w1 *= stream.vinf
   w2 *= stream.vinf
 
-  axp.contour(xpts, wpts, agrid, [0.0])
-  for z, cmap, dex in [np.log10(agrid), "Blues", 4.0], [np.log10(-agrid), "Reds", 3.0]: 
+  axp.contour(xpts, wpts, agrid, [0.0], linewidths=3, linestyles=":", colors="m")
+  for z, cmap, dex in [[np.log10(agrid), "Blues", 10.0],
+                       [np.log10(-agrid), "Reds", 3.0]]: 
       axp.contourf(xpts, wpts, z,
                    10, #[-0.5, 0.0, 0.5, 1.0, 1.5, 2.0],
                    vmax=np.nanmax(z), vmin=np.nanmax(z)-dex,
                    cmap=cmap)
 
-  axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=1.4, color="0.9")
-  axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=0.5, color="g")
+  axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=4, color="w", alpha=0.5)
+  axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=2, color="k", alpha=1.0)
   axp.axhline(stream.vinf, color='k', lw=0.5)
   axp.axvline(stream.Rstarstar, color='k', lw=0.5)
+  axp.axvline(stream.R0, color='r', lw=2, ls="--")
   axp.set(xlabel='$R$, pc', ylabel='$w$, km/s',
           xlim=[x1, x2], ylim=[w1, w2],
           xscale="log", yscale="log",
@@ -261,10 +271,11 @@ python test-stream-1d.py MS10 100 4 sil 0.2
 [[file:test-stream-1d-MS10-v100-n+40-sil020.pdf]]
 
 #+BEGIN_SRC sh :results file
-python test-stream-1d.py MS10 10 0 4 sil 0.02
+python test-stream-1d.py MS10 100 4 sil 0.02
 #+END_SRC
 
 #+RESULTS:
+[[file:test-stream-1d-MS10-v100-n+40-sil002.pdf]]
 
 #+BEGIN_SRC sh :results file
 python test-stream-1d.py MS20 20 -2 gra 0.02
@@ -316,18 +327,18 @@ python test-stream-1d.py MS10 60 0.0 gra 0.02 1.0
 [[file:test-stream-1d-MS10-v060-n+0-gra002.pdf]]
 
 #+BEGIN_SRC sh :results file
-python test-stream-1d.py MS10 60 1.0 gra 0.02 1.0
-#+END_SRC
-
-#+RESULTS:
-[[file:test-stream-1d-MS10-v060-n+10-gra002.pdf]]
-
-#+BEGIN_SRC sh :results file
 python test-stream-1d.py MS10 80 0.0 gra 0.02 1.0
 #+END_SRC
 
 #+RESULTS:
 [[file:test-stream-1d-MS10-v080-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+10-gra002.pdf]]
 
 #+BEGIN_SRC sh :results file
 python test-stream-1d.py MS10 80 1.0 gra 0.02 1.0
@@ -425,6 +436,30 @@ python test-stream-1d.py MS40 20 1.0 gra 0.5 1.0
     + src_python{ds.DustStream(vinf=20, phi=15.0, a=0.04, L4=0.63, n=1.0e-1)}
   + Decelerated by electron drag while w is of order 2 v_\infty
   + Sudden deceleration and total re-coupling by proton drag when w falls to about 20 km/s 
+
+
+** Functional dependence of the trajectory parameters
++ The net force map
+  + The zero-contour at least does not depend on a or v
++ Grain size effects
+  + Increasing size, a, reduces R_{\star\star} because \kappa_d = Q_P \sigma/m = 3 Q_p/(4 a \rho_d) is reduced and R_{\star\star} \prop \kappa_d L / v^2
+  + But it does not effect equilibrium R because that is just the radius where w_drift = v
+  + Does slightly effect minimum R because there is an overshoot below sonic drift radius R_sd (where w_drift = 10 km/s), which does depend on \sigma/m
++ Velocity effects
+  + We can move from the damped v > 80 to oscillatory 11 < v < 80 to damped again v < 10  regimes, but this does not change the dust wave radius in physical units much
+  + As velocity goes up, bowshock/wave radius R_0 gets smaller, so that dust wave separates
+    + For instance ~MS10 (20,40,60,80) 0.0 gra 0.02~
+    + At 20 km/s, R_0 is bigger than R_DW so there is no dust wave
+    + At 40 km/s and greater, R_0 is smaller so the dust wave can form
+    + As v increases, oscillations get floppier
+      + Albeit, only in terms of R_{\star\star} - they are more or less the same in terms of R_SD
+    + Finally, at 80 km/s we pass over to the damped oscillations
++ Density effects
+  + As we increase the density, we reduce R_0 and R_SD
+    + So minimum velocity for DW is little changed
+  + But R_{\star\star} is unchanged
+    + so the oscillations get tighter since R_SD / R_{\star\star} is smaller
+  + [ ] /Speculation:/ at high enough density, we get into BW regime, where R_0 is also independent of density - in which case DW will merge in to BW (like when \alpha_drag > 100 in previous model)
 ** Grain potential versus U_P (aka \Upsilon_P)
 + This is roughly logarithmic
 + Graph in ~cloudy-dust-charging~ project

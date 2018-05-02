@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.optimize import brentq
 import ds79
 
 MICRON = 1e-4                   # cm
@@ -6,9 +7,10 @@ MICRON = 1e-4                   # cm
 class DustStream(object):
     """A dust stream incident upon a star"""
     def __init__(self, L4=1.0, vinf=40.0, n=1.0, a=0.02,
-                 T=1e4, kappa=600.0, Qp=2.0, rho_d=3.0, phi_norm=1.0):
+                 eta=0.01, T=1e4, kappa=600.0, Qp=2.0, rho_d=3.0, phi_norm=1.0):
         # Star properties
         self.L4 = L4
+        self.eta = eta
         # Plasma stream properties
         self.vinf = vinf
         self.n = n
@@ -29,8 +31,17 @@ class DustStream(object):
         self.Rstarstar = 2*(self.kappa_d/self.kappa)*self.taustar*self.Rstar
         # P_rad/P_gas at R**
         self.Upstarstar = (self.vinf/self.cs)**2 * (self.Rstar/self.Rstarstar)**2
+        # Bow-shock radius in strong coupling limit
+        a, b = 0.0, 2*np.sqrt(1.0 + self.eta)
+        x = brentq(xfunc, a, b, args=(self.taustar, self.eta))
+        self.R0 = x*self.Rstar
 
         
+def xfunc(x, ts, eta):
+    """Function to be zeroed to find x"""
+    return x**2 - (1.0 - np.exp(-2*ts*x)) - eta
+
+
 def dydt_1d(y, t, s):
     """
     1D equation of motion for dust grain, subject to radiation force
@@ -67,3 +78,5 @@ def phi(x, s):
     # P_rad / P_gas
     Up = s.Upstarstar / x**2
     return 1.5*s.phi_norm*(np.log(Up) + 2.3)
+
+

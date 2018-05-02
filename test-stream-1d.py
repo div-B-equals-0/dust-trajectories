@@ -27,6 +27,12 @@ L4 = {
     "MS40": 22.2,
     "BSG": 30.2,
 }
+eta = {
+    "MS10": 0.0066,
+    "MS20": 0.1199,
+    "MS40": 0.4468,
+    "BSG": 0.3079,
+}
 
 
 # Set minor parameters according to star and grain type
@@ -58,7 +64,7 @@ Rstart = 2.5/ZOOM
 y0 = [Rstart, -1.0]
 
 stream = ds.DustStream(L4=L4[STAR], vinf=VINF, n=10**LOGN, a=A,
-                       T=Tgas[STAR], phi_norm=phi_norm, rho_d=rho_d)
+                       eta=eta[STAR], T=Tgas[STAR], phi_norm=phi_norm, rho_d=rho_d)
 
 streamid = f"{STAR}-v{int(VINF):03d}-n{int(10*LOGN):+02d}-{GRAIN}{int(100*A):03d}"
 
@@ -75,7 +81,7 @@ w = 1.0 + soln[:, 1]
 # wdrift = 1.0 / alpha / soln[:, 0]
 
 sns.set_style('ticks')
-sns.set_color_codes('dark')
+sns.set_color_codes('deep')
 fig, (ax, axp) = plt.subplots(2, 1, figsize=(4, 6))
 ax.plot(t - t0, soln[:, 0], label='$R/R_{0}$', zorder=3, lw=0.5)
 ax.plot(t - t0, soln[:, 1], label='$v / v_{\infty}$', lw=0.5)
@@ -90,7 +96,9 @@ ax.set(
 )
 t2 = np.linspace(0.0, 20.0, 201)
 
-x1, x2 = 0.008, 5.0
+R1, R2 = 2e-4, 20.0
+
+x1, x2 = R1/stream.Rstarstar, R2/stream.Rstarstar
 w1, w2 = 0.03/stream.vinf, 500.0/stream.vinf
 
 xpts = np.logspace(np.log10(x1), np.log10(x2), 151)
@@ -108,17 +116,19 @@ wpts *= stream.vinf
 w1 *= stream.vinf
 w2 *= stream.vinf
 
-axp.contour(xpts, wpts, agrid, [0.0])
-for z, cmap, dex in [np.log10(agrid), "Blues", 4.0], [np.log10(-agrid), "Reds", 3.0]: 
+axp.contour(xpts, wpts, agrid, [0.0], linewidths=3, linestyles=":", colors="m")
+for z, cmap, dex in [[np.log10(agrid), "Blues", 10.0],
+                     [np.log10(-agrid), "Reds", 3.0]]: 
     axp.contourf(xpts, wpts, z,
                  10, #[-0.5, 0.0, 0.5, 1.0, 1.5, 2.0],
                  vmax=np.nanmax(z), vmin=np.nanmax(z)-dex,
                  cmap=cmap)
 
-axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=1.4, color="0.9")
-axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=0.5, color="g")
+axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=4, color="w", alpha=0.5)
+axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=2, color="k", alpha=1.0)
 axp.axhline(stream.vinf, color='k', lw=0.5)
 axp.axvline(stream.Rstarstar, color='k', lw=0.5)
+axp.axvline(stream.R0, color='r', lw=2, ls="--")
 axp.set(xlabel='$R$, pc', ylabel='$w$, km/s',
         xlim=[x1, x2], ylim=[w1, w2],
         xscale="log", yscale="log",
