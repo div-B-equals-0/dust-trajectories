@@ -52,5 +52,5 @@ def Fdrag(w, T=1e4, phi=10.0):
     for c in COLLIDERS:
         w0 = CHARACTERISTIC_SPEED*np.sqrt(T/1e4/c.A)
         s = w / w0
-        rslt += c.abun*_G0(s) * (1.0 + COULOMB_LAMBDA*(c.Z*phi)**2*_G2byG0(s))
+        rslt = rslt + c.abun*_G0(s) * (1.0 + COULOMB_LAMBDA*(c.Z*phi)**2*_G2byG0(s))
     return rslt

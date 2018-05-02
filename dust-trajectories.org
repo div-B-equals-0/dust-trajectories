@@ -61,17 +61,69 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   import seaborn as sns
   import duststream as ds
 
-  figfile = sys.argv[0].replace('.py', '.pdf')
+
+  try: 
+      STAR = sys.argv[1]
+      VINF = float(sys.argv[2])
+      LOGN = float(sys.argv[3])
+      GRAIN = sys.argv[4]
+      A = float(sys.argv[5])
+  except:
+      print(f"Usage: {sys.argv[0]} L4 VINF LOGN GRAIN A [ZOOM]")
+
+  try: 
+      ZOOM = float(sys.argv[6])
+  except:
+      ZOOM = 1.0
+
+
+  L4 = {
+      "MS10": 0.64,
+      "MS20": 5.45,
+      "MS40": 22.2,
+      "BSG": 30.2,
+  }
+
+
+  # Set minor parameters according to star and grain type
+  Tgas = {
+      "MS10": 8000.0,
+      "MS20": 9000.0,
+      "MS40": 1e4,
+      "BSG": 8000.0,
+  }
+
+  if GRAIN == "gra":
+      rho_d = 2.2
+      if STAR in ["MS10", "BSG"]:
+          phi_norm = 1.0
+      else:
+          phi_norm = 1.5
+  else:
+      rho_d = 3.5
+      if STAR in ["MS10", "BSG"]:
+          phi_norm = 0.7
+      else:
+          phi_norm = 1.4
+
+
+
 
   # Initial conditions
-  y0 = [2.5, -1.0]
+  Rstart = 2.5/ZOOM
+  y0 = [Rstart, -1.0]
 
-  stream = ds.DustStream(vinf=20, phi=15.0, a=0.04, L4=0.63, n=1.0e-1)
+  stream = ds.DustStream(L4=L4[STAR], vinf=VINF, n=10**LOGN, a=A,
+                         T=Tgas[STAR], phi_norm=phi_norm, rho_d=rho_d)
+
+  streamid = f"{STAR}-v{int(VINF):03d}-n{int(10*LOGN):+02d}-{GRAIN}{int(100*A):03d}"
+
+  figfile = sys.argv[0].replace('.py', f'-{streamid}.pdf')
 
   # Time grid
-  t = np.linspace(0.0, 10.0, 501)
+  t = np.linspace(0.0, 10.0/ZOOM, 5001)
   soln = odeint(ds.dydt_1d, y0, t, args=(stream,))
-  t0 = t[np.argmin(soln[:, 0])]
+  t0 = t[soln[:, 1] >= 0.0].min()
 
   # Slippage velocity
   w = 1.0 + soln[:, 1]
@@ -81,21 +133,21 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   sns.set_style('ticks')
   sns.set_color_codes('dark')
   fig, (ax, axp) = plt.subplots(2, 1, figsize=(4, 6))
-  ax.plot(t - t0, soln[:, 0], label='$R/R_{0}$')
-  ax.plot(t - t0, soln[:, 1], label='$v / v_{\infty}$')
+  ax.plot(t - t0, soln[:, 0], label='$R/R_{0}$', zorder=3, lw=0.5)
+  ax.plot(t - t0, soln[:, 1], label='$v / v_{\infty}$', lw=0.5)
   #ax.plot(t - t0, wdrift, ls='--', label='$w_\mathrm{drift} / v_{\infty}$')
 
   # ax.axhline(1.0/alpha, ls=':', color='k', lw=0.8)
   ax.axhspan(0.0, 1.0, color='k', alpha=0.1)
-  ax.legend()
+  ax.legend(loc="lower left")
   ax.set(
       xlabel=r'Time / $(R_{0} / v_{\infty})$',
       ylim=[-1.1, 2.1]
   )
   t2 = np.linspace(0.0, 20.0, 201)
 
-  x1, x2 = 0.9*soln[:, 0].min(), 3.0
-  w1, w2 = 1e-2, 3.0*w.max()
+  x1, x2 = 0.008, 5.0
+  w1, w2 = 0.03/stream.vinf, 500.0/stream.vinf
 
   xpts = np.logspace(np.log10(x1), np.log10(x2), 151)
   wpts = np.logspace(np.log10(w1), np.log10(w2), 101)
@@ -113,10 +165,11 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   w2 *= stream.vinf
 
   axp.contour(xpts, wpts, agrid, [0.0])
-  axp.contourf(xpts, wpts, np.log10(agrid),
-              [-0.5, 0.0, 0.5, 1.0, 1.5], cmap="Reds")
-  axp.contourf(xpts, wpts, np.log10(-agrid),
-              [-0.5, 0.0, 0.5, 1.0, 1.5], cmap="Blues")
+  for z, cmap, dex in [np.log10(agrid), "Blues", 4.0], [np.log10(-agrid), "Reds", 3.0]: 
+      axp.contourf(xpts, wpts, z,
+                   10, #[-0.5, 0.0, 0.5, 1.0, 1.5, 2.0],
+                   vmax=np.nanmax(z), vmin=np.nanmax(z)-dex,
+                   cmap=cmap)
 
   axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=1.4, color="0.9")
   axp.plot(soln[:, 0]*stream.Rstarstar, w*stream.vinf, lw=0.5, color="g")
@@ -138,11 +191,228 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 #+END_SRC
 
 #+BEGIN_SRC sh :results file
-python test-stream-1d.py
+python test-stream-1d.py MS10 20 -2 gra 0.02
 #+END_SRC
 
 #+RESULTS:
-[[file:test-stream-1d.pdf]]
+[[file:test-stream-1d-MS10-v020-n-20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 10 -2 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v010-n-20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 10 -2 gra 0.2
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v010-n-20-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 10 -2 sil 0.2
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v010-n-20-sil020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 5 -2 gra 0.2
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v005-n-20-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 5 -2 sil 0.2
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v005-n-20-sil020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 5 -2 sil 0.5
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v005-n-20-sil050.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 50 4 sil 0.5
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v050-n+40-sil050.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 100 4 sil 0.5
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v100-n+40-sil050.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 100 4 sil 0.2
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v100-n+40-sil020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 10 0 4 sil 0.02
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 20 -2 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS20-v020-n-20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 20 -2 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v020-n-20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py BSG 20 -2 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-BSG-v020-n-20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 20 -1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v020-n-10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 20 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v020-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 40 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v040-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 80 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v080-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 80 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v080-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 100 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v100-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 2.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 3.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 3.0 gra 0.2 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+30-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 150 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS20-v150-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 150 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v150-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 150 1.0 gra 0.2 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v150-n+10-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 150 1.0 gra 0.5 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v150-n+10-gra050.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 50 1.0 gra 0.5 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v050-n+10-gra050.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 20 1.0 gra 0.5 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v020-n+10-gra050.pdf]]
+
 ** Initial impressions
 + There are at least 4 parameters:
   + L4, v, n, a
@@ -152,5 +422,25 @@ python test-stream-1d.py
   + Dust is swept in past R_{** }and follows drift velocity
   + Gets turned around and shoots out
     + For v ~ 20 km/s we can go out at twice velocity that we came in, so that w = 60 km/s since that is right in the middle of the trough in the drag force
+    + src_python{ds.DustStream(vinf=20, phi=15.0, a=0.04, L4=0.63, n=1.0e-1)}
   + Decelerated by electron drag while w is of order 2 v_\infty
   + Sudden deceleration and total re-coupling by proton drag when w falls to about 20 km/s 
+** Grain potential versus U_P (aka \Upsilon_P)
++ This is roughly logarithmic
++ Graph in ~cloudy-dust-charging~ project
+  + [[file:~/Dropbox/cloudy-dust-charging/phi-pratio.pdf]]
++ Reasonable approximation
+  * \(\phi = 1.5 \log(U_{P}_{}/0.1) = 1.5 \bigl( \log(U_{P}_{}) + 2.3 \bigr)\)
+    |   U_P |    \phi |
+    |------+------|
+    | 0.01 | -3.5 |
+    |  0.1 | -0.0 |
+    |    1 |  3.5 |
+    |   10 |  6.9 |
+    |  100 | 10.4 |
+    | 1000 | 13.8 |
+    |  1e4 | 17.3 |
+    #+TBLFM: $2=1.5 log($1) + 3.45 ; %.1f
++ The above function is good for MS10 and BSG with carbon grains
+  + Stellar type: hard spectrum (MS20, MS40) is about 1.5 times higher
+  + Grain type: Si grains are about 1.5 times lower 
