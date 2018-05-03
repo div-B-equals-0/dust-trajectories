@@ -99,7 +99,7 @@ t2 = np.linspace(0.0, 20.0, 201)
 R1, R2 = 2e-4, 20.0
 
 x1, x2 = R1/stream.Rstarstar, R2/stream.Rstarstar
-w1, w2 = 0.03/stream.vinf, 500.0/stream.vinf
+w1, w2 = 0.03/stream.vinf, 2000.0/stream.vinf
 
 xpts = np.logspace(np.log10(x1), np.log10(x2), 151)
 wpts = np.logspace(np.log10(w1), np.log10(w2), 101)
@@ -118,7 +118,7 @@ w2 *= stream.vinf
 
 axp.contour(xpts, wpts, agrid, [0.0], linewidths=3, linestyles=":", colors="m")
 for z, cmap, dex in [[np.log10(agrid), "Blues", 10.0],
-                     [np.log10(-agrid), "Reds", 3.0]]: 
+                     [np.log10(-agrid), "Reds", 4.0]]: 
     axp.contourf(xpts, wpts, z,
                  10, #[-0.5, 0.0, 0.5, 1.0, 1.5, 2.0],
                  vmax=np.nanmax(z), vmin=np.nanmax(z)-dex,

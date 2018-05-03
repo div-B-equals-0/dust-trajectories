@@ -155,7 +155,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   R1, R2 = 2e-4, 20.0
 
   x1, x2 = R1/stream.Rstarstar, R2/stream.Rstarstar
-  w1, w2 = 0.03/stream.vinf, 500.0/stream.vinf
+  w1, w2 = 0.03/stream.vinf, 2000.0/stream.vinf
 
   xpts = np.logspace(np.log10(x1), np.log10(x2), 151)
   wpts = np.logspace(np.log10(w1), np.log10(w2), 101)
@@ -174,7 +174,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 
   axp.contour(xpts, wpts, agrid, [0.0], linewidths=3, linestyles=":", colors="m")
   for z, cmap, dex in [[np.log10(agrid), "Blues", 10.0],
-                       [np.log10(-agrid), "Reds", 3.0]]: 
+                       [np.log10(-agrid), "Reds", 4.0]]: 
       axp.contourf(xpts, wpts, z,
                    10, #[-0.5, 0.0, 0.5, 1.0, 1.5, 2.0],
                    vmax=np.nanmax(z), vmin=np.nanmax(z)-dex,
@@ -334,6 +334,20 @@ python test-stream-1d.py MS10 80 0.0 gra 0.02 1.0
 [[file:test-stream-1d-MS10-v080-n+0-gra002.pdf]]
 
 #+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 100 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v100-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
 python test-stream-1d.py MS10 60 1.0 gra 0.02 1.0
 #+END_SRC
 
@@ -362,6 +376,14 @@ python test-stream-1d.py MS10 150 1.0 gra 0.02 1.0
 [[file:test-stream-1d-MS10-v150-n+10-gra002.pdf]]
 
 #+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 200 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v200-n+10-gra002.pdf]]
+
+
+#+BEGIN_SRC sh :results file
 python test-stream-1d.py MS10 150 2.0 gra 0.02 1.0
 #+END_SRC
 
@@ -376,11 +398,82 @@ python test-stream-1d.py MS10 150 3.0 gra 0.02 1.0
 [[file:test-stream-1d-MS10-v150-n+30-gra002.pdf]]
 
 #+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 4.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+40-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 2.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 40 2.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v040-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 3.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 3.0 gra 0.2 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+30-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 3.0 sil 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+30-sil002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 3.0 sil 0.2 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+30-sil020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 4.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+40-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 60 4.0 gra 0.5 
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v060-n+40-gra050.pdf]]
+
+
+#+BEGIN_SRC sh :results file
 python test-stream-1d.py MS10 150 3.0 gra 0.2 1.0
 #+END_SRC
 
 #+RESULTS:
 [[file:test-stream-1d-MS10-v150-n+30-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS10 150 3.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS10-v150-n+30-gra002.pdf]]
 
 #+BEGIN_SRC sh :results file
 python test-stream-1d.py MS20 150 1.0 gra 0.02 1.0
@@ -424,10 +517,64 @@ python test-stream-1d.py MS40 20 1.0 gra 0.5 1.0
 #+RESULTS:
 [[file:test-stream-1d-MS40-v020-n+10-gra050.pdf]]
 
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 300 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v300-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 300 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v300-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS40 500 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS40-v500-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 300 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 300 0.0 gra 0.01 
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS20-v300-n+0-gra001.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 500 0.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS20-v500-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 500 1.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS20-v500-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python test-stream-1d.py MS20 500 2.0 gra 0.02 1.0
+#+END_SRC
+
+#+RESULTS:
+[[file:test-stream-1d-MS20-v500-n+20-gra002.pdf]]
+
 ** Initial impressions
 + There are at least 4 parameters:
   + L4, v, n, a
-  + [ ] In principle \phi should be determined self-consistently
+  + [X] In principle \phi should be determined self-consistently
+    + Now done
   + Everything else is minor: \rho_d, Q_p
 + For v_\infty in range 11 \to 80 km/s, we get the limit cycle behavior:
   + Dust is swept in past R_{** }and follows drift velocity
@@ -457,10 +604,13 @@ python test-stream-1d.py MS40 20 1.0 gra 0.5 1.0
 + Density effects
   + As we increase the density, we reduce R_0 and R_SD
     + So minimum velocity for DW is little changed
+    + [X] But how exactly does R_SD change with density?
+      + It is at a fixed radiation parameter, \Xi = P_rad / P_gas
   + But R_{\star\star} is unchanged
     + so the oscillations get tighter since R_SD / R_{\star\star} is smaller
-  + [ ] /Speculation:/ at high enough density, we get into BW regime, where R_0 is also independent of density - in which case DW will merge in to BW (like when \alpha_drag > 100 in previous model)
-** Grain potential versus U_P (aka \Upsilon_P)
+  + [X] /Speculation:/ at high enough density, we get into BW regime, where R_0 is also independent of density - in which case DW will merge in to BW (like when \alpha_drag > 100 in previous model)
+    + This does seem to be true, but needs to be quantified more carefully
+** Grain potential versus U_P (aka \Upsilon_P, aka \Xi)
 + This is roughly logarithmic
 + Graph in ~cloudy-dust-charging~ project
   + [[file:~/Dropbox/cloudy-dust-charging/phi-pratio.pdf]]
@@ -478,4 +628,6 @@ python test-stream-1d.py MS40 20 1.0 gra 0.5 1.0
     #+TBLFM: $2=1.5 log($1) + 3.45 ; %.1f
 + The above function is good for MS10 and BSG with carbon grains
   + Stellar type: hard spectrum (MS20, MS40) is about 1.5 times higher
-  + Grain type: Si grains are about 1.5 times lower 
+  + Grain type: Si grains are about 1.5 times lower
++ Upsilon \Upsilon 𝚼 𝛶
++ Xi Ξ 𝛯 𝝣 
