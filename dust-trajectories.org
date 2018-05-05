@@ -630,4 +630,109 @@ python test-stream-1d.py MS20 500 2.0 gra 0.02 1.0
   + Stellar type: hard spectrum (MS20, MS40) is about 1.5 times higher
   + Grain type: Si grains are about 1.5 times lower
 + Upsilon \Upsilon 𝚼 𝛶
-+ Xi Ξ 𝛯 𝝣 
++ Xi Ξ 𝛯 𝝣
+** Library for on-axis trajectories: ~onaxis_traject.py~
+#+BEGIN_SRC sh
+mkdir data
+mkdir figs
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS20 500 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS20-v500-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 50 4.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v050-n+40-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 50 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v050-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 50 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v050-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 300 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v300-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 300 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v300-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 150 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v150-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 100 1.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v100-n+10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 100 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v100-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 100 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v100-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 80 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v080-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 60 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v060-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 40 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v040-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 20 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v020-n+0-gra002.pdf]]
