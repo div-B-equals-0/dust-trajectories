@@ -736,3 +736,60 @@ python onaxis_traject.py MS10 20 0.0 gra 0.02
 
 #+RESULTS:
 [[file:figs/on-axis-MS10-v020-n+0-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 20 -1.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v020-n-10-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 20 -3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v020-n-30-gra002.pdf]]
+** Do plots
+
+#+BEGIN_SRC sh :results file
+python onaxis-stats-plot.py MS40 v500 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-stats-plot-MS40-v500-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-stats-plot.py MS10 v040 gra020
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-stats-plot-MS10-v040-gra020.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-stats-plot.py MS10 v040 sil002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-stats-plot-MS10-v040-sil002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-stats-plot.py MS10 v040 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-stats-plot-MS10-v040-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-stats-plot.py MS10 v080 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-stats-plot-MS10-v080-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-stats-plot.py MS10 v020 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-stats-plot-MS10-v020-gra002.pdf]]

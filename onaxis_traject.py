@@ -41,7 +41,7 @@ class Trajectory(object):
         """
         self.star = star
         self.grain = grain
-        self.id_ = f"{star}-v{int(vinf):03d}-n{int(10*logn):+02d}"
+        self.id_ = f"{star}-v{int(vinf):03d}-n{int(10*logn):+03d}"
         self.id_ += f"-{grain}{int(100*a):03d}"
 
         # Solid body density depends on type of grain, while
@@ -121,7 +121,11 @@ class Trajectory(object):
         # net acceleration is zero
         R_wd_pts = np.empty_like(self.wpts)
         for j in range(len(R_wd_pts)):
-            R_wd_pts[j] = self.Rpts[self.amap[j, :] < 0.0].min()
+            try:
+                R_wd_pts[j] = self.Rpts[self.amap[j, :] < 0.0].min()
+            except ValueError:
+                # Can happen for low density and low w
+                R_wd_pts[j] = 2*self.Rpts[-1]
         # Sonic drift radius is minimum of these radii for w not too large
         idx = np.where(self.wpts < 100.0, R_wd_pts, 999.0).argmin()
         self.Rsd = R_wd_pts[idx]
@@ -230,6 +234,8 @@ class Trajectory(object):
         sns.despine()
         fig.tight_layout()
         fig.savefig(self.figfile)
+        # Prevent resource leaks
+        plt.close(fig)
         
 
 if __name__ == "__main__":
