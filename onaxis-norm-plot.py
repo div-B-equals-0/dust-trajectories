@@ -21,6 +21,7 @@ R0 = []
 Rstarstar = []
 Rsd = []
 Rmin = []
+Rstar = []
 
 for fn in filenames:
     data = json.load(open(fn))
@@ -29,22 +30,30 @@ for fn in filenames:
     Rstarstar.append(data["stream"]["Rstarstar"])
     Rsd.append(data["R sonic drift"])
     Rmin.append(data["R min"][0])
+    Rstar.append(data["stream"]["Rstar"])
 
+R0 = np.array(R0)
+Rstarstar = np.array(Rstarstar)
+Rsd = np.array(Rsd)
+Rmin = np.array(Rmin)
+Rstar = np.array(Rstar)
 
+    
 figfile = "figs/" + sys.argv[0].replace(
     ".py", f"-{STARSTRING}-{VSTRING}-{DUSTSTRING}.pdf")
 fig, ax = plt.subplots()
 
-ax.plot(density, R0, label="R0")
-ax.plot(density, Rmin, label="Rmin")
-ax.plot(density, Rsd, ls="--", label="Rsd")
-ax.plot(density, Rstarstar, ls=":", label="R**")
+ax.plot(density, R0/Rstar, label="$R_0 / R_*$")
+ax.plot(density, Rmin/Rstar, label=r"$R_\mathrm{DW} / R_*$")
+ax.plot(density, Rsd/Rstar, ls="--", label=r"$R_\mathrm{rip} / R_*$")
+ax.plot(density, Rstarstar/Rstar, ls=":", label="$R_{**} / R_*$")
 ax.legend()
 ax.set(
     xscale="log",
-    yscale="log",
-#    xlim=[1e-4, 2e7],
+    yscale="linear",
+    xlabel="Stream density, $n$, cm$^{-3}$",
+    ylim=[0.0, 10*R0[0]/Rstar[0]],
 )
-
+sns.despine()
 fig.savefig(figfile)
 print(figfile, end="")
