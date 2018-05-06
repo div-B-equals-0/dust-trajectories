@@ -45,8 +45,14 @@ fig, ax = plt.subplots()
 
 ax.plot(density, R0/Rstar, label="$R_0 / R_*$")
 ax.plot(density, Rmin/Rstar, label=r"$R_\mathrm{DW} / R_*$")
-ax.plot(density, Rsd/Rstar, ls="--", label=r"$R_\mathrm{rip} / R_*$")
+ax.plot(density, Rsd/Rstar, ls="--", label=r"$R_\dag / R_*$")
 ax.plot(density, Rstarstar/Rstar, ls=":", label="$R_{**} / R_*$")
+
+# Harmonic mean of Rsd and Rstarstar
+# Turned out not to be very accurate 
+# Rharm = 1./(1./Rsd + 1./Rstarstar)
+# ax.plot(density, Rharm/Rstar, ls=":", label=r"_nolabel_")
+
 ax.legend()
 ax.set(
     xscale="log",

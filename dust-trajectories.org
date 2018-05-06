@@ -631,6 +631,10 @@ python test-stream-1d.py MS20 500 2.0 gra 0.02 1.0
   + Grain type: Si grains are about 1.5 times lower
 + Upsilon \Upsilon 𝚼 𝛶
 + Xi Ξ 𝛯 𝝣
++ R_\dag is the rip point, when P_rad/P_gas = \Xi_\dag
++ What would be a good replacement for \star\star?
+  + R_\S or R_\subset or R_\supset or R_\wedge or R_\Leftrightarrow or R_\sim or R_\cap or \(R_\leadsto\) or \(R_{\Updownarrow}\) or \(R_{\hookrightarrow}\)
+  + Not convinced by any of them
 ** Library for on-axis trajectories: ~onaxis_traject.py~
 #+BEGIN_SRC sh
 mkdir data
@@ -750,6 +754,15 @@ python onaxis_traject.py MS10 20 -3.0 gra 0.02
 
 #+RESULTS:
 [[file:figs/on-axis-MS10-v020-n-30-gra002.pdf]]
+
+Very small grain
+#+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 80 4.0 gra 0.002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v080-n+40-gra000.pdf]]
+
 ** Do plots of radii versus density
 
 #+BEGIN_SRC sh :results file
@@ -824,6 +837,13 @@ python onaxis-norm-plot.py MS10 v080 gra020
 [[file:figs/onaxis-norm-plot-MS10-v080-gra020.pdf]]
 
 #+BEGIN_SRC sh :results file
+python onaxis-norm-plot.py MS10 v080 sil000
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-norm-plot-MS10-v080-sil000.pdf]]
+
+#+BEGIN_SRC sh :results file
 python onaxis-norm-plot.py MS10 v080 gra002
 #+END_SRC
 
@@ -836,3 +856,38 @@ python onaxis-norm-plot.py MS10 v040 gra002
 
 #+RESULTS:
 [[file:figs/onaxis-norm-plot-MS10-v040-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-norm-plot.py MS10 v100 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-norm-plot-MS10-v100-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-norm-plot.py MS10 v300 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-norm-plot-MS10-v300-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-norm-plot.py MS20 v300 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-norm-plot-MS20-v300-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-norm-plot.py MS40 v500 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-norm-plot-MS40-v500-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-norm-plot.py MS40 v300 gra002
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/onaxis-norm-plot-MS40-v300-gra002.pdf]]
