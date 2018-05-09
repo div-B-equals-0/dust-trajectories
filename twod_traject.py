@@ -77,13 +77,15 @@ class Trajectory2d(object):
         """
         Solve the ODE to find the grain trajectory `X`, `V` versus `t`
 
-        These are in units of R** and v_inf
+        These are in units of R_sd and v_inf
         """
 
-        # Use Rsd as a characteristic scale for distance and time
+        # Externally, we use R_sd and Rs_d / v_inf as characteristic
+        # scales for distance and time, respectively.  Internally, the
+        # integration uses R_**, so we must convert between them:
         rescale = self.Rsd / self.stream.Rstarstar
         
-        # Initial conditions
+        # Initial conditions in units of R_** and v_inf
         y0 = [Xstart*rescale, -1.0, self.Y0*rescale, 0.0]
         # Time grid
         self.Time = np.linspace(0.0, tstop*rescale, nt)

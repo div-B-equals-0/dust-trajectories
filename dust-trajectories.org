@@ -1338,5 +1338,138 @@ python twod_traject.py 0.1 MS10 150 4.0 sil 0.2
 #+RESULTS:
 [[file:figs/twod-MS10-v150-n+40-sil020-Y0100.pdf]]
 
+
+
+** Maps of the 2d trajectories
+
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 70 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v070-n+00-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 70 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v070-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 60 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v060-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 150 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 300 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v300-n+30-gra002.pdf]]
+
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 150 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v150-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 100 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v100-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 80 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v080-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 60 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v060-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 40 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v040-n+20-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 40 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v040-n+00-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 100 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v100-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 100 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v100-n+00-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 100 -1.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v100-n-10-gra002.pdf]]
+
+Looking at the sequence of 1e3 pcc models, the inner radius stays the same, but the outer radius reduces as velocity increases. 
+
+Smaller dust grains - sticks more closely to R_\dag and R_drift
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 60 2.0 gra 0.002
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v060-n+20-gra000.pdf]]
+
+Larger dust grains - penetrate in deeper and bounce out further 
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 60 2.0 gra 0.2
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v060-n+20-gra020.pdf]]
+
+Silicate grains instead of graphite - has about 1.7 times the radius.  Otherwise, similar.  Also, take an unconscionably long time to run. 
+
+#+BEGIN_SRC sh :results file
+python twod-stream-map.py MS10 60 2.0 sil 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:twod-stream-map-MS10-v060-n+20-sil002.pdf]]
+
+
 * TODO Adding the Lorentz force
 + 
