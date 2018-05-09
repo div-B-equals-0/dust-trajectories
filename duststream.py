@@ -103,7 +103,7 @@ def vector_accel_2d(x, y, u, v, s, ugas=-1.0, vgas=0.0):
     # Magnitude of radiative acceleration
     a_rad = 0.5/r**2
     # Magnitude of drag 
-    a_drag = s.drag_constant*ds79.Fdrag(w*s.vinf, s.T, phi(r, s))
+    a_drag = 0.5*s.drag_constant*ds79.Fdrag(w*s.vinf, s.T, phi(r, s))
     # a_rad is directed along +r_hat ...
     ax = a_rad*x/r
     ay = a_rad*y/r

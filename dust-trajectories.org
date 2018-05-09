@@ -1009,7 +1009,7 @@ python twod_traject.py 0.5 MS10 60 0.0 gra 0.02
 python twod_traject.py 0.6 MS10 60 0.0 gra 0.02
 #+END_SRC
 
-V = 40 and n = 1  (but this one has minimum radius < R_0, so it would be a bow shock, not a dust wave)
+V = 40 and n = 1  
 
 #+BEGIN_SRC sh :results file
 python twod_traject.py 0.001 MS10 40 0.0 gra 0.02
@@ -1024,6 +1024,13 @@ python twod_traject.py 0.1 MS10 40 0.0 gra 0.02
 
 #+RESULTS:
 [[file:figs/twod-MS10-v040-n+00-gra002-Y0100.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.1 MS10 40 0.0 sil 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+00-sil002-Y0100.pdf]]
 
 V = 100 and n = 1
 
@@ -1131,6 +1138,20 @@ python twod_traject.py 0.6 MS10 100 2.0 gra 0.02
 Even higher density
 
 #+BEGIN_SRC sh :results file
+python onaxis_traject.py MS10 100 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-MS10-v100-n+30-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.0 MS10 100 3.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v100-n+30-gra002-Y0000.pdf]]
+
+#+BEGIN_SRC sh :results file
 python twod_traject.py 0.001 MS10 100 3.0 gra 0.02
 #+END_SRC
 
@@ -1169,11 +1190,53 @@ python twod_traject.py 0.001 MS10 40 2.0 gra 0.02
 [[file:figs/twod-MS10-v040-n+20-gra002-Y0001.pdf]]
 
 #+BEGIN_SRC sh :results file
-python twod_traject.py 0.001 MS10 40 1.0 gra 0.02
+python twod_traject.py 0.1 MS10 40 2.0 gra 0.02
 #+END_SRC
 
 #+RESULTS:
-[[file:figs/twod-MS10-v040-n+10-gra002-Y0001.pdf]]
+[[file:figs/twod-MS10-v040-n+20-gra002-Y0100.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.3 MS10 40 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+20-gra002-Y0300.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.5 MS10 40 2.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+20-gra002-Y0500.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.001 MS10 40 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+00-gra002-Y0001.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.1 MS10 40 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+00-gra002-Y0100.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.3 MS10 40 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+00-gra002-Y0300.pdf]]
+
+#+BEGIN_SRC sh :results file
+python twod_traject.py 0.5 MS10 40 0.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/twod-MS10-v040-n+00-gra002-Y0500.pdf]]
 
 #+BEGIN_SRC sh :results file
 python twod_traject.py 0.001 MS10 50 1.0 gra 0.02
