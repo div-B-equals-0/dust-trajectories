@@ -38,7 +38,7 @@ class DustStream(object):
 
         
 def xfunc(x, ts, eta):
-    """Function to be zeroed to find x"""
+    """Function to be zeroed to find R_0 / R_*"""
     return x**2 - (1.0 - np.exp(-2*ts*x)) - eta
 
 
@@ -58,7 +58,7 @@ def dydt_1d(y, t, s):
 
 def total_accel(x, w, s):
     """
-    Total acceleration on a grain: radiative + drag
+    Total 1d radial acceleration on a grain: radiative + drag
 
     Input parameters: `x` is radius in units of R_** (drag-free
     turnaround radius).  `w` is relative velocity in km/s.  `s` is a
@@ -66,6 +66,52 @@ def total_accel(x, w, s):
     """
     return 0.5*(x**(-2)
                 - s.drag_constant*ds79.Fdrag(w, s.T, phi(x, s)))
+
+
+def dydt_2d(state, t, s):
+    """
+    2D equation of motion for dust grain, subject to radiation force
+    and drag force. Used in ODE evolution of `state` vector with `t` 
+
+    Extra argument `s` is a DustStream() instance
+    """
+    x, u, y, v = state
+    dxdt = u
+    dydt = v
+    dudt, dvdt = vector_accel_2d(x, y, u, v, s)
+    return [dxdt, dudt, dydt, dvdt]
+
+
+def vector_accel_2d(x, y, u, v, s, ugas=-1.0, vgas=0.0):
+    """
+    Total 2d vector acceleration on a grain: radiative + drag
+
+    Input parameters: `x`, `y` are position in units of R_**
+    (drag-free turnaround radius).  `u`, `v` are velocity in units of
+    v_inf.  `s` is a `DustStream` object.  Optional arguments `ugas`,
+    `vgas` are for if we do the back reaction on the gas.
+
+    Returns: `ax`, `ay`, the cartesian components of acceleration
+    """
+    # Radius from star
+    r = np.hypot(x, y)
+    # Relative velocity: components and magnitude
+    wx = u - ugas
+    wy = v - vgas
+    w = np.hypot(wx, wy)
+
+    # Magnitude of radiative acceleration
+    a_rad = 0.5/r**2
+    # Magnitude of drag 
+    a_drag = s.drag_constant*ds79.Fdrag(w*s.vinf, s.T, phi(r, s))
+    # a_rad is directed along +r_hat ...
+    ax = a_rad*x/r
+    ay = a_rad*y/r
+    if w > 0.0:
+        # ... while a_drag is along -w_hat
+        ax += -a_drag*wx/w
+        ay += -a_drag*wy/w
+    return ax, ay
 
 
 def phi(x, s):
