@@ -7,6 +7,7 @@ MICRON = 1e-4                   # cm
 class DustStream(object):
     """A dust stream incident upon a star"""
     def __init__(self, L4=1.0, vinf=40.0, n=1.0, a=0.02,
+                 thetaB=0.0,
                  eta=0.01, T=1e4, kappa=600.0, Qp=2.0, rho_d=3.0, phi_norm=1.0):
         # Star properties
         self.L4 = L4
@@ -27,6 +28,15 @@ class DustStream(object):
         self.drag_constant = (4.0/self.Qp)*(self.cs*self.taustar*self.kappa_d
                                             /(self.vinf*self.kappa))**2
         self.phi_norm = phi_norm
+
+        # Magnetic field
+        self.thetaB = thetaB    # B-field angle from x-axis, in degrees
+        self.b_hat = np.array([
+            np.cos(np.deg2rad(thetaB)),
+            np.sin(np.deg2rad(thetaB)),
+            0.0,
+        ])
+        
         # R**: drag-free turn-around radius
         self.Rstarstar = 2*(self.kappa_d/self.kappa)*self.taustar*self.Rstar
         # P_rad/P_gas at R**
@@ -112,6 +122,67 @@ def vector_accel_2d(x, y, u, v, s, ugas=-1.0, vgas=0.0):
         ax += -a_drag*wx/w
         ay += -a_drag*wy/w
     return ax, ay
+
+def vector_accel_3d_frozen(x, y, z, vx, vy, vz, s,
+                           vxgas=-1.0, vygas=0.0, vzgas=0.0):
+    """
+    Total 3d vector acceleration on a grain: radiative + drag,
+    assuming that Lorentz force is so strong that grains can only be
+    accelerated along the field lines, not perpendicular to them
+
+    Input parameters: `x`, `y`, `z` are position in units of R_**
+    (drag-free turnaround radius).  `vx`, `vy`, `vz` are velocity in
+    units of v_inf.  `s` is a `DustStream` object, which must contain
+    the unit vector `s.b_hat` along the B-field.  Optional arguments
+    `vxgas`, `vygas`, `vzgas` are for if we do the back reaction on
+    the gas.
+
+    Returns: `ax`, `ay`, `az`, the cartesian components of
+    acceleration
+    """
+    # Radius from star
+    r = np.sqrt(x**2 + y**2 + z**2)
+    # Unit vector in radial direction
+    r_hat = np.array([x/r, y/r, z/r])
+    # Magnitude of radiative acceleration
+    a_rad = 0.5/r**2
+    # Contribution of radiation to acceleration vector 
+    a_vec = a_rad*r_hat
+
+    # Relative velocity: components and magnitude
+    wx = vx - vxgas
+    wy = vy - vygas
+    wz = vz - vzgas
+    w = np.sqrt(wx**2 + wy**2 + wz**2)
+    if w > 0.0:
+        # Unit vector along slip velocity
+        w_hat = np.array([wx/w, wy/w, wz/w])
+        # Magnitude of drag 
+        a_drag = 0.5*s.drag_constant*ds79.Fdrag(w*s.vinf, s.T, phi(r, s))
+        # Contribution of drag to acceleration vector
+        a_vec += -a_drag*w_hat
+
+    # Only retain component projected along B-field
+    a_proj = np.dot(a_vec, s.b_hat)
+    ax, ay, az = a_proj*s.b_hat
+    return ax, ay, az
+
+
+def dydt_3d(state, t, s, accel_func=vector_accel_3d_frozen):
+    """
+    3D equation of motion for dust grain, subject to a variety of
+    forces.  Used in ODE evolution of `state` vector with `t`
+
+    Extra argument `s` is a DustStream() instance.  Optional argument
+    is function that evaluates the vector sum of accelerations
+    """
+    x, vx, y, vy, z, vz = state
+    dxdt = vx
+    dydt = vy
+    dzdt = vz
+    dvxdt, dvydt, dvzdt = accel_func(x, y, z, vx, vy, vz, s)
+    return [dxdt, dvxdt, dydt, dvydt, dzdt, dvzdt]
+
 
 
 def phi(x, s):

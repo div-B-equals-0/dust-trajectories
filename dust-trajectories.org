@@ -897,7 +897,8 @@ python onaxis-norm-plot.py MS40 v300 gra002
 
 * TODO Make some videos of the phase space trajectories
 
-* TODO 3d trajectories
+* DONE 3d trajectories
+CLOSED: [2018-05-09 Wed 18:13]
 + Actually 2D in non-magnetic case, since each trajectory is a plane curve
 
 
@@ -1472,4 +1473,15 @@ python twod-stream-map.py MS10 60 2.0 sil 0.02
 
 
 * TODO Adding the Lorentz force
-+ 
++ First do the guiding center approximation for Larmor radius \to 0
++ Implemented in [[file:frozen_trajectory.py]]
++ Testing if it is working
+
+#+BEGIN_SRC sh :results file
+python frozen_trajectory.py MS10 60 2.0 gra 0.02 0.0 0.53 0.0
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/frozen-Y0530-Z0000-MS10-v060-n+20-gra002-th000.pdf]]
+
+Now do maps like before 
