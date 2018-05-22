@@ -33,7 +33,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 
   for phi in 0.25, 1.0, 4.0, 16.0:
       ax.plot(w, ds79.Fdrag(w, phi=phi), label=rf"$\phi = {phi:.2f}$")
-  ax.legend()
+  ax.legend(title="Grain potential")
   ax.set(
       xscale="log",
       yscale="log",
