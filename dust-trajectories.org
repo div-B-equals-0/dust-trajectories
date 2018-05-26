@@ -25,14 +25,14 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   from matplotlib import pyplot as plt
   import seaborn as sns
 
-  pltfile = "test-Fdrag.pdf"
+  pltfile = "test-Fdrag-exact.pdf"
 
   w = np.logspace(-1.5, 3.5, 200)
 
   fig, ax = plt.subplots()
 
   for phi in 0.25, 1.0, 4.0, 16.0:
-      ax.plot(w, ds79.Fdrag(w, phi=phi), label=rf"$\phi = {phi:.2f}$")
+      ax.plot(w, ds79.Fdrag(w, T=8000, phi=phi, n=100), label=rf"$\phi = {phi:.2f}$")
   ax.legend(title="Grain potential")
   ax.set(
       xscale="log",
@@ -46,7 +46,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 #+END_SRC
 
 #+RESULTS:
-[[file:test-Fdrag.pdf]]
+[[file:test-Fdrag-exact.pdf]]
 * On-axis 1d integration
 + As before, we normalize distances by the radiative turnaround radius
   + Velocities normalized by v_\infty

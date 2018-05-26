@@ -2,8 +2,10 @@
 Implementation of equation 4, 5, 6 of Draine & Salpeter 1979ApJ...231...77D
 """
 import numpy as np
+from scipy.special import erf
 
-G0_CONSTANT = 3.0*np.sqrt(np.pi)/8.0
+SQRT_PI = np.sqrt(np.pi)
+G0_CONSTANT = 3.0*SQRT_PI/8.0
 def _G0(s):
     "Draine & Salpeter's approximate version"
     return (s/G0_CONSTANT)*np.sqrt(1.0 + (G0_CONSTANT*s)**2)
@@ -11,6 +13,24 @@ def _G0(s):
 def _G2byG0(s):
     "My improved approximation to the ratio"
     return 1.0/(2.0 + s**2 + s**4)
+
+# Exact versions, because why not?
+def _G0_exact(s):
+    "DS79 equation 5a"
+    rslt = (s**2 + 1.0 - 1.0/(4.0*s**2))*erf(s)
+    rslt += (s + 1.0/(2*s))*np.exp(-s**2)/SQRT_PI
+    return rslt
+
+def _G2_exact(s):
+    "DS79 equation 6a"
+    return erf(s)/s**2 - 2*np.exp(-s**2)/(s*SQRT_PI)
+
+def _ln_Lambda(n, T):
+    """
+    Coulomb logarithm: natural log of plasma parameter
+    """
+    return 23.267 + 1.5*np.log(T/1e4) - 0.5*np.log(n)
+
 
 # Thermal speed of proton at 1e4 K
 CHARACTERISTIC_SPEED = 12.8486
@@ -37,16 +57,35 @@ COLLIDERS = [
     Collider("He+", A=4.0, abun=0.1),
     # Collider("He++", A=4.0, Z=2.0, abun=0.1),
 ]
-        
-def Fdrag(w, T=1e4, phi=10.0):
+
+def Fdrag(w, T=1e4, phi=10.0, n=1.0):
     """
     Sum of Stokes and Coulomb contributions to gas-grain drag as a
     function of relative velocity `w` (in km/s), gas temperature `T`
-    (in Kelvin), and grain potential `phi` (in units of kT).  Returns
-    drag force in units of gas pressure times geometric cross-section:
+    (in Kelvin), grain potential `phi` (in units of kT), and density
+    `n` (in pcc).  Returns drag force in units of gas pressure times
+    geometric cross-section:
 
     F / (2 n k T pi a^2)
+    """
+    rslt = np.zeros_like(w)
+    for c in COLLIDERS:
+        w0 = CHARACTERISTIC_SPEED*np.sqrt(T/1e4/c.A)
+        s = w / w0
+        # Can't use += operator when w is a vector
+        rslt = rslt + c.abun * (_G0_exact(s) +
+                                _ln_Lambda(n, T)*(c.Z*phi)**2*_G2_exact(s))
+    return rslt
 
+def Fdrag_approx(w, T=1e4, phi=10.0):
+    """
+    OLD APPROXIMATE VERSION.  Sum of Stokes and Coulomb contributions
+    to gas-grain drag as a function of relative velocity `w` (in
+    km/s), gas temperature `T` (in Kelvin), and grain potential `phi`
+    (in units of kT).  Returns drag force in units of gas pressure
+    times geometric cross-section:
+
+    F / (2 n k T pi a^2)
     """
     rslt = np.zeros_like(w)
     for c in COLLIDERS:
