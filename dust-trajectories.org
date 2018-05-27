@@ -47,6 +47,127 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
 
 #+RESULTS:
 [[file:test-Fdrag-exact.pdf]]
+** Components of drag force
++ Metal abundances for gas-phase ISM from Cloudy.  Here I list all elements with abundances higher than 1 part-per-million
+  |    |         |         abun |  A |       abun*A |
+  |----+---------+--------------+----+--------------|
+  | C  | -3.5229 | 2.9998532e-4 | 12 | 3.5998238e-3 |
+  | N  | -4.1549 | 7.0000316e-5 | 14 | 9.8000442e-4 |
+  | O  | -3.3979 | 4.0003685e-4 | 16 | 6.4005896e-3 |
+  | Ne | -4.2218 | 6.0006735e-5 | 20 | 1.2001347e-3 |
+  | Mg | -5.5229 | 2.9998532e-6 | 24 | 7.1996477e-5 |
+  | Si | -5.3979 | 4.0003685e-6 | 28 | 1.1201032e-4 |
+  | S  | -5.0000 |         1e-5 | 32 |       3.2e-4 |
+  | Ar | -5.5229 | 2.9998532e-6 | 40 | 1.1999413e-4 |
+  | Fe | -5.5229 | 2.9998532e-6 | 56 | 1.6799178e-4 |
+  |----+---------+--------------+----+--------------|
+  |    |         |      0.00085 |    |         15.3 |
+  #+TBLFM: $3=10**$-1::$5=$-1 $-2::@11$3=vsum(@I..@II);f5::@11$5=vsum(@I..@II)/$-2;f1
++ So, the total abundance is 8.5e-4 and the average mass is 15.3
+  + We use these as an average metal collider in the graph
+  + Assume metals are doubly ionized
+  + Unsurprisingly, they make a negligible contribution
+
+#+BEGIN_SRC python :results file :return pltfile
+  import numpy as np
+  import ds79
+  from matplotlib import pyplot as plt
+  import seaborn as sns
+
+  pltfile = "test-Fdrag-components.pdf"
+
+  w = np.logspace(-1.5, 3.5, 200)
+
+  sns.set_color_codes()
+  fig, ax = plt.subplots()
+
+  colliders = ds79.DEFAULT_COLLIDERS + [ds79.Collider("CNO++", A=15.3, Z=2.0, abun=8.5e-4)]
+  fdrag = ds79.Fdrag_components(w, T=8000, phi=10.0, n=100, colliders=colliders)
+
+  colors = "rcmy"
+  ftotal = np.zeros_like(w)
+  for collider, color in zip(fdrag, colors):
+      ax.plot(w, fdrag[collider][1], color=color, label=collider)
+      ax.plot(w, fdrag[collider][0], color=color, ls='--', label="_nolabel_")
+      ftotal += fdrag[collider][0] + fdrag[collider][1]
+  ax.plot(w, ftotal, color="k", label="Total")
+  ax.legend(title="Collider")
+  ax.set(
+      xscale="log",
+      yscale="log",
+      xlabel="Gas-grain velocity difference, $w$, km/s",
+      ylabel=r"Drag force $/ (2 n k T) (\pi a^{2}) $",
+  )
+  sns.despine()
+  fig.tight_layout()
+  fig.savefig(pltfile)
+#+END_SRC
+
+#+RESULTS:
+[[file:test-Fdrag-components.pdf]]
+** Regimes in (v, \phi) space
+#+BEGIN_SRC python :results file :return pltfile
+  import numpy as np
+  import ds79
+  from matplotlib import pyplot as plt
+  import seaborn as sns
+
+  pltfile = "test-Fdrag-param-space.pdf"
+
+  w, phi = np.meshgrid(
+      np.logspace(-1.5, 3.5, 200),
+      np.logspace(-2.0, 2.0, 200)
+  )
+
+  sns.set_color_codes()
+  fig, ax = plt.subplots(figsize=(6, 6))
+
+  colliders = ds79.DEFAULT_COLLIDERS + [ds79.Collider("CNO++", A=15.3, Z=2.0, abun=8.5e-4)]
+  fdict = ds79.Fdrag_components(w, T=8000, phi=phi, n=100, colliders=colliders)
+
+  # Total solid body drag
+  fEpstein = np.sum([f[0] for f in fdict.values()], axis=0)
+  # Total solid body plus Coulomb
+  fTotal = np.sum([f[0] + f[1] for f in fdict.values()], axis=0)
+
+  frac_Epstein = fEpstein / fTotal
+  frac_proton = fdict["proton"][1] / fTotal
+  frac_electron = fdict["electron"][1] / fTotal
+
+
+  ax.contourf(w, phi, frac_Epstein, [0.5, 0.6, 0.7, 1.0], alpha=1.0,
+             cmap="Blues")
+  ax.contourf(w, phi, frac_proton, [0.5, 0.6, 0.7, 1.0], alpha=1.0,
+             cmap="Reds")
+  ax.contourf(w, phi, frac_electron, [0.5, 0.6, 0.7, 1.0], alpha=1.0,
+             cmap="Greens")
+  ax.contour(w, phi, fTotal,
+             [0.1, 1.0, 10.0, 100.0, 1.e3, 1.e4, 1.e5],
+             colors="w", linewidths=2.5)
+  ax.contour(w, phi, fTotal,
+             [0.1, 1.0, 10.0, 100.0, 1.e3, 1.e4, 1.e5],
+             colors="k", linewidths=0.5)
+  ax.axvline(10.0, color="w", lw=3, ls=":")
+  ax.text(1.0, 0.04, "I", color="w", fontsize="xx-large")
+  ax.text(150.0, 0.1, "II", color="w", fontsize="xx-large")
+  ax.text(1.0, 10.0, "III", color="w", fontsize="xx-large")
+  ax.text(16.0, 20.0, "IV", color="w", fontsize="xx-large")
+  ax.text(150.0, 25.0, "V", color="w", fontsize="xx-large")
+  ax.set(
+      xscale="log",
+      yscale="log",
+      xlabel="Gas-grain velocity difference, $w$, km/s",
+      ylabel=r"Grain potential, $|\phi|$",
+  )
+  sns.despine()
+  fig.tight_layout()
+  fig.savefig(pltfile)
+#+END_SRC
+
+#+RESULTS:
+[[file:test-Fdrag-param-space.pdf]]
+
+
 * On-axis 1d integration
 + As before, we normalize distances by the radiative turnaround radius
   + Velocities normalized by v_\infty

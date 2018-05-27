@@ -34,7 +34,7 @@ def _ln_Lambda(n, T):
 
 # Thermal speed of proton at 1e4 K
 CHARACTERISTIC_SPEED = 12.8486
-COULOMB_LAMBDA = 20.0
+APPROX_COULOMB_LAMBDA = 20.0
 
 
 class Collider(object):
@@ -51,31 +51,64 @@ class Collider(object):
         self.Z = Z
         self.abun = abun
 
-COLLIDERS = [
+DEFAULT_COLLIDERS = [
     Collider("proton"),
     Collider("electron", A=5.446e-4),
     Collider("He+", A=4.0, abun=0.1),
-    # Collider("He++", A=4.0, Z=2.0, abun=0.1),
 ]
 
-def Fdrag(w, T=1e4, phi=10.0, n=1.0):
+# For hard ionizing spectrum, replace He+ with He++
+HARD_IONIZATION_COLLIDERS = DEFAULT_COLLIDERS[:-1] + [
+    Collider("He++", A=4.0, Z=2.0, abun=0.1),
+]
+
+def Fdrag(w, T=1e4, phi=10.0, n=1.0, colliders=DEFAULT_COLLIDERS):
     """
-    Sum of Stokes and Coulomb contributions to gas-grain drag as a
+    Sum of Epstein and Coulomb contributions to gas-grain drag as a
     function of relative velocity `w` (in km/s), gas temperature `T`
     (in Kelvin), grain potential `phi` (in units of kT), and density
-    `n` (in pcc).  Returns drag force in units of gas pressure times
-    geometric cross-section:
+    `n` (in pcc).  Optional argument `colliders` should be a list of
+    `Collider` instances.
+
+    Returns drag force in units of gas pressure times geometric
+    cross-section:
 
     F / (2 n k T pi a^2)
     """
     rslt = np.zeros_like(w)
-    for c in COLLIDERS:
+    for c in colliders:
         w0 = CHARACTERISTIC_SPEED*np.sqrt(T/1e4/c.A)
         s = w / w0
         # Can't use += operator when w is a vector
         rslt = rslt + c.abun * (_G0_exact(s) +
                                 _ln_Lambda(n, T)*(c.Z*phi)**2*_G2_exact(s))
     return rslt
+
+
+def Fdrag_components(w, T=1e4, phi=10.0, n=1.0, colliders=DEFAULT_COLLIDERS):
+    """
+    Individual components of gas-grain drag as a function of relative
+    velocity `w` (in km/s), gas temperature `T` (in Kelvin), grain
+    potential `phi` (in units of kT), and density `n` (in pcc).
+    Optional argument `colliders` should be a list of `Collider`
+    instances.
+
+    Returns dict of drag forces in units of gas pressure times
+    geometric cross-section (see `Fdrag`).  Dict is keyed by the
+    collider name ('proton', 'electron', etc) and each item is a
+    2-tuple of the (Epstein G0, Coulomb G2) contributions from that
+    collider.  If `w` is an array then each element of each 2-tuple is
+    an array of the same shape as `w`.
+    """
+    rslt = {}
+    for c in colliders:
+        w0 = CHARACTERISTIC_SPEED*np.sqrt(T/1e4/c.A)
+        s = w / w0
+        # return dict of 2-tuples for (Epstein, Coulomb) contributions
+        rslt[c.name] = (c.abun*_G0_exact(s),
+                        c.abun*_ln_Lambda(n, T)*(c.Z*phi)**2*_G2_exact(s))
+    return rslt
+
 
 def Fdrag_approx(w, T=1e4, phi=10.0):
     """
@@ -88,8 +121,10 @@ def Fdrag_approx(w, T=1e4, phi=10.0):
     F / (2 n k T pi a^2)
     """
     rslt = np.zeros_like(w)
-    for c in COLLIDERS:
+    for c in DEFAULT_COLLIDERS:
         w0 = CHARACTERISTIC_SPEED*np.sqrt(T/1e4/c.A)
         s = w / w0
-        rslt = rslt + c.abun*_G0(s) * (1.0 + COULOMB_LAMBDA*(c.Z*phi)**2*_G2byG0(s))
+        rslt = rslt + c.abun*_G0(s)*(1.0 +
+                                     APPROX_COULOMB_LAMBDA*
+                                     (c.Z*phi)**2*_G2byG0(s))
     return rslt
