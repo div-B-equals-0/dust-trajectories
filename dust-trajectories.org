@@ -111,6 +111,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   import ds79
   from matplotlib import pyplot as plt
   import seaborn as sns
+  import matplotlib.patheffects as PathEffects
 
   pltfile = "test-Fdrag-param-space.pdf"
 
@@ -120,7 +121,7 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
   )
 
   sns.set_color_codes()
-  fig, ax = plt.subplots(figsize=(6, 6))
+  fig, ax = plt.subplots(figsize=(5, 5))
 
   colliders = ds79.DEFAULT_COLLIDERS + [ds79.Collider("CNO++", A=15.3, Z=2.0, abun=8.5e-4)]
   fdict = ds79.Fdrag_components(w, T=8000, phi=phi, n=100, colliders=colliders)
@@ -141,18 +142,37 @@ This is an extension of the models I have done in ~dust-wave.org~ from the Jorge
              cmap="Reds")
   ax.contourf(w, phi, frac_electron, [0.5, 0.6, 0.7, 1.0], alpha=1.0,
              cmap="Greens")
-  ax.contour(w, phi, fTotal,
-             [0.1, 1.0, 10.0, 100.0, 1.e3, 1.e4, 1.e5],
-             colors="w", linewidths=2.5)
-  ax.contour(w, phi, fTotal,
-             [0.1, 1.0, 10.0, 100.0, 1.e3, 1.e4, 1.e5],
-             colors="k", linewidths=0.5)
+  cw = ax.contour(w, phi, fTotal,
+                  [0.1, 1.0, 10.0, 100.0, 1.e3, 1.e4, 1.e5],
+                  colors="w", alpha=0.7, linewidths=2.5)
+  ck = ax.contour(w, phi, fTotal,
+                  [0.1, 1.0, 10.0, 100.0, 1.e3, 1.e4, 1.e5],
+                  colors="k", linewidths=0.5)
+
+  # Place contour labels by hand
+  for x, y, s in [
+          [6, 0.015, r"1",  ],
+          [100, 0.015, r"100",],
+          [1000, 0.015, r"10\,000",],
+  ]:
+      ax.text(x, y, f"$f_{{\mathrm{{drag}}}} = {s} \,f_*$", color="k",
+              ha="center", va="bottom", fontweight="black",
+              rotation="vertical", 
+              path_effects=[PathEffects.withStroke(linewidth=3,
+                                                   alpha=0.7,
+                                                   foreground="w")])
+
+
   ax.axvline(10.0, color="w", lw=3, ls=":")
-  ax.text(1.0, 0.04, "I", color="w", fontsize="xx-large")
-  ax.text(150.0, 0.1, "II", color="w", fontsize="xx-large")
-  ax.text(1.0, 10.0, "III", color="w", fontsize="xx-large")
-  ax.text(16.0, 20.0, "IV", color="w", fontsize="xx-large")
-  ax.text(150.0, 25.0, "V", color="w", fontsize="xx-large")
+  for x, y, s in [
+          [1.5, 0.04, "I",  ],
+          [140.0, 0.3, "II",],
+          [1.0, 10.0, "III",],
+          [14.0, 20.0, "IV",],
+          [120.0, 25.0, "V",],
+  ]:
+      ax.text(x, y, s, color="w", fontsize="xx-large", fontweight="black")
+
   ax.set(
       xscale="log",
       yscale="log",
