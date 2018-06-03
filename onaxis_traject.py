@@ -31,6 +31,19 @@ Tgas = {
     "BSG": 8000.0,
 }
 
+
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(MyEncoder, self).default(obj)
+
+        
 class Trajectory(object):
     """
     Dust trajectory on axis
@@ -140,8 +153,8 @@ class Trajectory(object):
         self.Req = np.interp(self.stream.vinf, self.wpts, R_wd_pts)
         self.data["R equilib drift"] =  self.Req
         self.data["w equilib drift"] = self.stream.vinf
-        # self.data["w drift grid"] = self.wpts[::5].tolist()
-        # self.data["R drift grid"] = R_wd_pts[::5].tolist()
+        # self.data["w drift grid"] = self.wpts[::5]
+        # self.data["R drift grid"] = R_wd_pts[::5]
         
     def analyze_trajectory(self):
         # Mask of those points where V changes sign between this point
@@ -155,10 +168,10 @@ class Trajectory(object):
         minima = crossings & (self.V < 0.0)
 
         # Save lists of all t and R for each type of extrema 
-        self.data["t min"] = self.t[minima].tolist() 
-        self.data["R min"] = self.R[minima].tolist() 
-        self.data["t max"] = self.t[maxima].tolist() 
-        self.data["R max"] = self.R[maxima].tolist() 
+        self.data["t min"] = self.t[minima] 
+        self.data["R min"] = self.R[minima] 
+        self.data["t max"] = self.t[maxima] 
+        self.data["R max"] = self.R[maxima] 
 
         # Final state
         self.data["R end"] = self.R[-1]
@@ -171,7 +184,7 @@ class Trajectory(object):
     def savedata(self, prefix):
         self.datafile = f'{prefix}-{self.id_}.json'
         with open(self.datafile, "w") as f:
-            json.dump(self.data, f, indent=4)
+            json.dump(self.data, f, indent=4, cls=MyEncoder)
 
     def make_accel_map(self):
         """

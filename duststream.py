@@ -75,7 +75,7 @@ def total_accel(x, w, s):
     `DustStream` object.
     """
     return 0.5*(x**(-2)
-                - s.drag_constant*ds79.Fdrag(w, s.T, phi(x, s)))
+                - s.drag_constant*ds79.Fdrag(w, s.T, phi(x, s), s.n))
 
 
 def dydt_2d(state, t, s):

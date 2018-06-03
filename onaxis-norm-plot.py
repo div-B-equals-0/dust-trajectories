@@ -44,7 +44,7 @@ figfile = "figs/" + sys.argv[0].replace(
 fig, ax = plt.subplots()
 
 ax.plot(density, R0/Rstar, label="$R_0 / R_*$")
-ax.plot(density, Rmin/Rstar, label=r"$R_\mathrm{DW} / R_*$")
+ax.plot(density, Rmin/Rstar, label=r"$R_\mathrm{min} / R_*$")
 ax.plot(density, Rsd/Rstar, ls="--", label=r"$R_\dag / R_*$")
 ax.plot(density, Rstarstar/Rstar, ls=":", label="$R_{**} / R_*$")
 
@@ -58,7 +58,7 @@ ax.set(
     xscale="log",
     yscale="linear",
     xlabel="Stream density, $n$, cm$^{-3}$",
-    ylim=[0.0, 10*R0[0]/Rstar[0]],
+    ylim=[0.0, 5*R0[0]/Rstar[0]],
 )
 sns.despine()
 fig.savefig(figfile)

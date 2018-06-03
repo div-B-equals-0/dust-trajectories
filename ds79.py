@@ -62,6 +62,8 @@ HARD_IONIZATION_COLLIDERS = DEFAULT_COLLIDERS[:-1] + [
     Collider("He++", A=4.0, Z=2.0, abun=0.1),
 ]
 
+
+SMALL_NUMBER = 1e-7
 def Fdrag(w, T=1e4, phi=10.0, n=1.0, colliders=DEFAULT_COLLIDERS):
     """
     Sum of Epstein and Coulomb contributions to gas-grain drag as a
@@ -79,6 +81,8 @@ def Fdrag(w, T=1e4, phi=10.0, n=1.0, colliders=DEFAULT_COLLIDERS):
     for c in colliders:
         w0 = CHARACTERISTIC_SPEED*np.sqrt(T/1e4/c.A)
         s = w / w0
+        # Guard against divide by zero
+        s = np.abs(s) + SMALL_NUMBER 
         # Can't use += operator when w is a vector
         rslt = rslt + c.abun * (_G0_exact(s) +
                                 _ln_Lambda(n, T)*(c.Z*phi)**2*_G2_exact(s))
