@@ -22,7 +22,7 @@ except:
 
 
 traj = Trajectory(STAR, VINF, LOGN, GRAIN, A)
-traj.integrate(tstop=15, nt=10001)
+traj.integrate(tstop=25, nt=10001)
 
 # Now find drag force as function of time
 fdrag = traj.stream.drag_constant * ds79.Fdrag(

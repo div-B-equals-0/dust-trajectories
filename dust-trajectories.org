@@ -1036,7 +1036,7 @@ python onaxis-norm-plot.py MS40 v300 gra002
 
 
 
-*** Plot impulse of f_drag during trajectory
+** Plot impulse of f_drag during trajectory
 #+BEGIN_SRC sh :results file
 python onaxis-impulse.py MS10 50 3.0 gra 0.02
 #+END_SRC
