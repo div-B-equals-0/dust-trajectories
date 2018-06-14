@@ -1051,6 +1051,20 @@ python onaxis-impulse.py MS10 80 3.0 gra 0.02
 #+RESULTS:
 [[file:figs/on-axis-impulse-MS10-v080-n+30-gra002.pdf]]
 
+#+BEGIN_SRC sh :results file
+python onaxis-impulse.py MS10 80 4.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-impulse-MS10-v080-n+40-gra002.pdf]]
+
+#+BEGIN_SRC sh :results file
+python onaxis-impulse.py MS10 40 4.0 gra 0.02
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/on-axis-impulse-MS10-v040-n+40-gra002.pdf]]
+
 * TODO Make some videos of the phase space trajectories
 
 * DONE 3d trajectories
