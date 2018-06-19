@@ -1654,4 +1654,14 @@ python frozen_trajectory.py MS10 60 2.0 gra 0.02 0.0 0.53 0.0
 #+RESULTS:
 [[file:figs/frozen-Y0530-Z0000-MS10-v060-n+20-gra002-th000.pdf]]
 
-Now do maps like before 
++ Now do maps like before
+  + Implemented in [[file:frozen-stream-map.py]]
+  + Takes a long time to run
++ And movies
+  + Implemented in [[file:frozen-stream-movie.py]]
+
+
+** Inertia-confined magnetic dust wave
++ This has an analytic solution for \theta_B = 0
++ But for \theta_B = 90, the ODE is much gnarlier
+

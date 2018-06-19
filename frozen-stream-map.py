@@ -14,7 +14,7 @@ try:
     THETAB = float(sys.argv[6])
     Z0 = float(sys.argv[7])
 except:
-    print(f"Usage: {sys.argv[0]} STAR VINF LOGN GRAIN A THETAB Z0")
+    sys.exit(f"Usage: {sys.argv[0]} STAR VINF LOGN GRAIN A THETAB Z0")
 
 stream_id = f"{STAR}-v{int(VINF):03d}-n{int(10*LOGN):+03d}"
 stream_id += f"-{GRAIN}{int(100*A):03d}"
