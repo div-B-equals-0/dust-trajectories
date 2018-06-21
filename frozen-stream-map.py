@@ -14,7 +14,14 @@ try:
     THETAB = float(sys.argv[6])
     Z0 = float(sys.argv[7])
 except:
-    sys.exit(f"Usage: {sys.argv[0]} STAR VINF LOGN GRAIN A THETAB Z0")
+    sys.exit(f"Usage: {sys.argv[0]} STAR VINF LOGN GRAIN A THETAB Z0 [ZOOM]")
+
+# Inertia-confined case is small when using R_\dag (Rsd) as the
+# distance scale, so allow for optional zooming in
+try:
+    ZOOM = float(sys.argv[8])
+except:
+    ZOOM = 1.0
 
 stream_id = f"{STAR}-v{int(VINF):03d}-n{int(10*LOGN):+03d}"
 stream_id += f"-{GRAIN}{int(100*A):03d}"
@@ -24,7 +31,7 @@ stream_id += f"-Z{int(1000*Z0):04d}"
 # Impact parameter grid
 N = 5
 ny0 = N*400 + 1
-y0grid = 0.001 + np.linspace(-3.0, 3.0, ny0)
+y0grid = 0.001 + np.linspace(-3.0/ZOOM, 3.0/ZOOM, ny0)
 
 # Grid to save R(theta)
 nth = 200
@@ -42,7 +49,7 @@ ylocus = rm*np.sin(thm_grid)
 xx, yy, ww, wp = [], [], [], []
 xs, ys = [], []
 traj = Trajectory3d(STAR, VINF, LOGN, GRAIN, A, THETAB)
-nt, tstop, Xstart = 2001, 15.0, 3.0
+nt, tstop, Xstart = 2001, 15.0, 3.0/ZOOM
 for iy0, y0 in enumerate(y0grid[::-1]):
     traj.integrate(y0, Z0, Xstart=Xstart, tstop=tstop, nt=nt)
 
@@ -63,8 +70,8 @@ for iy0, y0 in enumerate(y0grid[::-1]):
 
 # Use the last trajectory for getting the model parameters
 
-xmin, xmax = -3*traj.Rsd, 3*traj.Rsd
-ymin, ymax = -3*traj.Rsd, 3*traj.Rsd
+xmin, xmax = -3*traj.Rsd/ZOOM, 3*traj.Rsd/ZOOM
+ymin, ymax = -3*traj.Rsd/ZOOM, 3*traj.Rsd/ZOOM
 
 figfile = sys.argv[0].replace(".py", "-" + stream_id + ".pdf")
 sns.set_color_codes()
@@ -104,8 +111,9 @@ for x, y in zip(xs, ys):
     ax.plot(x, y, '-', color='w', lw=1.4, alpha=0.7)
     ax.plot(x, y, '-', color='k', lw=0.8)
     for x1, color in zip(x1s, colors):
-        itime = int((Xstart - x1)*nt/tstop)
-        ax.plot(x[itime-10:itime+20:10], y[itime-10:itime+20:10],
+        itime = int((Xstart - x1/ZOOM)*nt/tstop)
+        ax.plot(x[itime-10//ZOOM:itime+20//ZOOM:10//ZOOM],
+                y[itime-10//ZOOM:itime+20//ZOOM:10//ZOOM],
                 '.', ms=4.0, color=color, zorder=20-x1)
 
 
@@ -136,6 +144,11 @@ ax.plot(traj.Rsd*np.cos(thm_grid),
 ax.plot(traj.data["R equilib drift"]*np.cos(thm_grid),
         traj.data["R equilib drift"]*np.sin(thm_grid),
         '--', color='c', alpha=1.0, lw=2)
+
+# Plot drag-free turnaround radius
+ax.plot(traj.stream.Rstarstar*np.cos(thm_grid),
+        traj.stream.Rstarstar*np.sin(thm_grid),
+        '--', color='g', alpha=1.0, lw=2)
 
 # Mark the axes and origin
 ax.axvline(0.0, ls='--', color='0.5', lw=0.5)
