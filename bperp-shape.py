@@ -19,7 +19,7 @@ def trajectory(tgrid, y0, ydot0=0):
 
 figfile = sys.argv[0].replace(".py", ".pdf")
 
-y0max = 20.0
+y0max = 10.0
 ny0 = 1000
 y0min = y0max/ny0
 y0grid_lin = np.linspace(y0min, y0max, ny0)
@@ -34,28 +34,51 @@ nt = 8001
 
 sns.set_color_codes()
 fig, ax = plt.subplots(figsize=(5, 4))
-ystack, vstack = [], []
+ystack, vstack, xstack, wstack = [], [], [], []
 tgrid = np.linspace(-20, 10, nt)
 for y0 in y0grid:
     y, v = trajectory(tgrid, y0)
     ystack.append(y)
     vstack.append(v)
+    xstack.append(-tgrid)
+    if y0 in y0grid_lin:
+        # weight by 1/r
+        wstack.append(y0/y)
+    else:
+        # do not include streamlines from log grid
+        wstack.append(np.zeros_like(y))
 
 # Find inner envelope of trajectories: minimum y at each x
 ystack = np.array(ystack)
 vstack = np.array(vstack)
+xstack = np.array(xstack)
+wstack = np.array(wstack)
 yshape = np.min(ystack, axis=0)
 
 # Fit a second order polynomial to x(y)
 m = yshape > 0.5
 p2 = np.poly1d(np.polyfit(yshape[m], tgrid[m], 2))
 
-# Fit a second order polynomial to x(y**2)
+# Fit a first order polynomial to x(y**2)
 p1 = np.poly1d(np.polyfit(yshape[m]**2, tgrid[m], 1))
 
 # extended y grid to show negative side
 yext = np.linspace(-2.0, yshape.max(), 200)
 j0 = np.argmin(p2(yext))
+
+# find density by binning
+xmin, xmax = -8.0, 1.5
+ymin, ymax = -1.2, 7.0
+H, xe, ye = np.histogram2d(xstack.ravel(), ystack.ravel(), bins=(95, 82), weights=wstack.ravel(),
+                           range=[[xmin, xmax], [ymin, ymax]])
+Hm, xe, ye = np.histogram2d(xstack.ravel(), -ystack.ravel(), bins=(95, 82), weights=wstack.ravel(),
+                            range=[[xmin, xmax], [ymin, ymax]])
+
+H += Hm
+H0 = H[-1, -1]
+ax.imshow(H.T, origin='lower', extent=[xmin, xmax, ymin, ymax],
+          vmin=0.0, vmax=2*H0, cmap='magma')
+
 
 ax.plot(-tgrid, yshape)
 #ax.plot(tgrid, np.sqrt(6*tgrid), lw=0.5)

@@ -1668,8 +1668,17 @@ python twod-stream-map.py MS10 60 2.0 sil 0.02
 ** Inertia-confined magnetic dust wave
 + This has an analytic solution for \theta_B = 0
 + But for \theta_B = 90, the ODE is much gnarlier
+*** Parallel case: \theta_B = 0
 
+#+BEGIN_SRC python :eval no :tangle bpara-density.py
+dx = dy = 0.01
+xmin, xmax = -2.0, 2.0
+ymin, ymax = -0.2, 1.5
+xgrid = np.arange(xmin, xmax, dx)
+ygrid = np.arange(ymin, ymax, dx)
 
+#+END_SRC
+*** Perpendicular case: \theta_B = 90
 #+BEGIN_SRC python :tangle bperp-ode.py :eval no
   import sys
   import numpy as np
@@ -2104,7 +2113,7 @@ bperp-ode.pdf
 
   figfile = sys.argv[0].replace(".py", ".pdf")
 
-  y0max = 20.0
+  y0max = 10.0
   ny0 = 1000
   y0min = y0max/ny0
   y0grid_lin = np.linspace(y0min, y0max, ny0)
@@ -2119,16 +2128,25 @@ bperp-ode.pdf
 
   sns.set_color_codes()
   fig, ax = plt.subplots(figsize=(5, 4))
-  ystack, vstack = [], []
+  ystack, vstack, xstack, wstack = [], [], [], []
   tgrid = np.linspace(-20, 10, nt)
   for y0 in y0grid:
       y, v = trajectory(tgrid, y0)
       ystack.append(y)
       vstack.append(v)
+      xstack.append(-tgrid)
+      if y0 in y0grid_lin:
+          # weight by 1/r
+          wstack.append(y0/y)
+      else:
+          # do not include streamlines from log grid
+          wstack.append(np.zeros_like(y))
 
   # Find inner envelope of trajectories: minimum y at each x
   ystack = np.array(ystack)
   vstack = np.array(vstack)
+  xstack = np.array(xstack)
+  wstack = np.array(wstack)
   yshape = np.min(ystack, axis=0)
 
   # Fit a second order polynomial to x(y)
@@ -2141,6 +2159,20 @@ bperp-ode.pdf
   # extended y grid to show negative side
   yext = np.linspace(-2.0, yshape.max(), 200)
   j0 = np.argmin(p2(yext))
+
+  # find density by binning
+  xmin, xmax = -8.0, 1.5
+  ymin, ymax = -1.2, 7.0
+  H, xe, ye = np.histogram2d(xstack.ravel(), ystack.ravel(), bins=(95, 82), weights=wstack.ravel(),
+                             range=[[xmin, xmax], [ymin, ymax]])
+  Hm, xe, ye = np.histogram2d(xstack.ravel(), -ystack.ravel(), bins=(95, 82), weights=wstack.ravel(),
+                              range=[[xmin, xmax], [ymin, ymax]])
+
+  H += Hm
+  H0 = H[-1, -1]
+  ax.imshow(H.T, origin='lower', extent=[xmin, xmax, ymin, ymax],
+            vmin=0.0, vmax=2*H0, cmap='magma')
+
 
   ax.plot(-tgrid, yshape)
   #ax.plot(tgrid, np.sqrt(6*tgrid), lw=0.5)
