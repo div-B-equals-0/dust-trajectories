@@ -8,7 +8,7 @@ import seaborn as sns
 def rhs(y, t):
     """Right-hand side of ODE"""
     ydot = y[1]
-    ydotdot = y[0] / (y[0]**2 + t**2)**1.5
+    ydotdot = 0.5 * y[0] / (y[0]**2 + t**2)**1.5
     return ydot, ydotdot
 
 def trajectory(tgrid, y0, ydot0=0):
@@ -23,8 +23,8 @@ def afit(y0):
 
 figfile = sys.argv[0].replace(".py", ".pdf")
 
-y0min = 1e-6
-y0max = 100.0
+y0min = 1e-3
+y0max = 50.0
 ny0 = 301
 y0grid = np.logspace(np.log10(y0min), np.log10(y0max), ny0)
 
@@ -33,7 +33,7 @@ nt = 200001
 fig, ax = plt.subplots(figsize=(5, 4))
 vmax, tmax, twidth, yamax, amax = [], [], [], [], []
 for y0 in y0grid:
-    tscale = 30*tfit(y0)
+    tscale = 50*tfit(y0)
     tgrid = np.linspace(-200, 200, nt)
     tgrid = np.linspace(-tscale, tscale, nt)
     y, v = trajectory(tgrid, y0)
@@ -60,7 +60,7 @@ ax.plot(x, np.array(amax)*np.array(twidth),
 # ax.plot(x, afit(y0grid), lw=0.2, label="_nolabel_")
 ax.axhline(1.0, alpha=0.4, color="k", lw=0.3)
 ax.axvline(1.0, alpha=0.4, color="k", lw=0.3)
-ax.legend(fontsize="small", ncol=2)
+#ax.legend(fontsize="small", ncol=2)
 ax.set(xscale="log", yscale="log", xlabel="impact parameter, $y_{0}$")
 
 sns.despine()

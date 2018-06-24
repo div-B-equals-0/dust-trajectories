@@ -1690,7 +1690,7 @@ ygrid = np.arange(ymin, ymax, dx)
   def rhs(y, t):
       """Right-hand side of ODE"""
       ydot = y[1]
-      ydotdot = y[0] / (y[0]**2 + t**2)**1.5
+      ydotdot = 0.5 * y[0] / (y[0]**2 + t**2)**1.5
       return ydot, ydotdot
 
   def trajectory(tgrid, y0, ydot0=0):
@@ -1705,8 +1705,8 @@ ygrid = np.arange(ymin, ymax, dx)
 
   figfile = sys.argv[0].replace(".py", ".pdf")
 
-  y0min = 1e-6
-  y0max = 100.0
+  y0min = 1e-3
+  y0max = 50.0
   ny0 = 301
   y0grid = np.logspace(np.log10(y0min), np.log10(y0max), ny0)
 
@@ -1715,7 +1715,7 @@ ygrid = np.arange(ymin, ymax, dx)
   fig, ax = plt.subplots(figsize=(5, 4))
   vmax, tmax, twidth, yamax, amax = [], [], [], [], []
   for y0 in y0grid:
-      tscale = 30*tfit(y0)
+      tscale = 50*tfit(y0)
       tgrid = np.linspace(-200, 200, nt)
       tgrid = np.linspace(-tscale, tscale, nt)
       y, v = trajectory(tgrid, y0)
@@ -1742,7 +1742,7 @@ ygrid = np.arange(ymin, ymax, dx)
   # ax.plot(x, afit(y0grid), lw=0.2, label="_nolabel_")
   ax.axhline(1.0, alpha=0.4, color="k", lw=0.3)
   ax.axvline(1.0, alpha=0.4, color="k", lw=0.3)
-  ax.legend(fontsize="small", ncol=2)
+  #ax.legend(fontsize="small", ncol=2)
   ax.set(xscale="log", yscale="log", xlabel="impact parameter, $y_{0}$")
 
   sns.despine()
@@ -1760,333 +1760,293 @@ ygrid = np.arange(ymin, ymax, dx)
 #+RESULTS:
 #+begin_example
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.5999880000000D+00
+      in above message,  r1 = -0.6084721674368D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.5999880000000D+00   r2 = -0.5399880000005D+00
+      in above,  r1 = -0.6084721674368D+01   r2 = -0.5706669253773D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.7891455970652D+00
+      in above message,  r1 = -0.6223349663386D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.7891455970652D+00   r2 = -0.7140846730581D+00
+      in above,  r1 = -0.6223349663386D+01   r2 = -0.5842960622373D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.8471468128979D+00
+      in above message,  r1 = -0.6365785002098D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.8471468128979D+00   r2 = -0.7706658888606D+00
+      in above,  r1 = -0.6365785002098D+01   r2 = -0.5982993100762D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.8972602103610D+00
+      in above message,  r1 = -0.6586846113154D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.8972602103610D+00   r2 = -0.8195374114361D+00
+      in above,  r1 = -0.6586846113154D+01   r2 = -0.6200322154773D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9236484168621D+00
+      in above message,  r1 = -0.6662572477681D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9236484168621D+00   r2 = -0.8452672845227D+00
+      in above,  r1 = -0.6662572477681D+01   r2 = -0.6274769584164D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9938032485365D+00
+      in above message,  r1 = -0.6817183501484D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9938032485365D+00   r2 = -0.9136604723136D+00
+      in above,  r1 = -0.6817183501484D+01   r2 = -0.6426769049296D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1008591727306D+01
+      in above message,  r1 = -0.7139523924276D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1008591727306D+01   r2 = -0.9280758729911D+00
+      in above,  r1 = -0.7139523924276D+01   r2 = -0.6743665181152D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1070450449795D+01
+      in above message,  r1 = -0.7480328064833D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1070450449795D+01   r2 = -0.9883690574528D+00
+      in above,  r1 = -0.7480328064833D+01   r2 = -0.7078717263879D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1154301907391D+01
+      in above message,  r1 = -0.7568557971589D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1154301907391D+01   r2 = -0.1070088973558D+01
+      in above,  r1 = -0.7568557971589D+01   r2 = -0.7165459162880D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1265570349543D+01
+      in above message,  r1 = -0.7748793798991D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1265570349543D+01   r2 = -0.1178519561813D+01
+      in above,  r1 = -0.7748793798991D+01   r2 = -0.7342657110923D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1346931432082D+01
+      in above message,  r1 = -0.8028905065072D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1346931432082D+01   r2 = -0.1257802740703D+01
+      in above,  r1 = -0.8028905065072D+01   r2 = -0.7618052691476D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1368243214787D+01
+      in above message,  r1 = -0.9054603460680D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1368243214787D+01   r2 = -0.1278570172221D+01
+      in above,  r1 = -0.9054603460680D+01   r2 = -0.8626556675583D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1389960926755D+01
+      in above message,  r1 = -0.9626190796104D+01
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1389960926755D+01   r2 = -0.1299733169052D+01
+      in above,  r1 = -0.9626190796104D+01   r2 = -0.9188620137524D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1434650566306D+01
+      in above message,  r1 = -0.1024162831154D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1434650566306D+01   r2 = -0.1343281573769D+01
+      in above,  r1 = -0.1024162831154D+02   r2 = -0.9793853195680D+01
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1529315034038D+01
+      in above message,  r1 = -0.1050095832636D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1529315034038D+01   r2 = -0.1435530249180D+01
+      in above,  r1 = -0.1050095832636D+02   r2 = -0.1004889904922D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1605259765289D+01
+      in above message,  r1 = -0.1076820822866D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1605259765289D+01   r2 = -0.1509539316502D+01
+      in above,  r1 = -0.1076820822866D+02   r2 = -0.1031174369178D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1685775377836D+01
+      in above message,  r1 = -0.1132761386325D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1685775377836D+01   r2 = -0.1588005791838D+01
+      in above,  r1 = -0.1132761386325D+02   r2 = -0.1086195990376D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1713684959213D+01
+      in above message,  r1 = -0.1192225751219D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1713684959213D+01   r2 = -0.1615205876545D+01
+      in above,  r1 = -0.1192225751219D+02   r2 = -0.1144688111442D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1771186071408D+01
+      in above message,  r1 = -0.1470905432332D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1771186071408D+01   r2 = -0.1671246656718D+01
+      in above,  r1 = -0.1470905432332D+02   r2 = -0.1418868026101D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1800803910498D+01
+      in above message,  r1 = -0.1573610407175D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1800803910498D+01   r2 = -0.1700113060717D+01
+      in above,  r1 = -0.1573610407175D+02   r2 = -0.1519934760117D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1893291925250D+01
+      in above message,  r1 = -0.1617088925200D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1893291925250D+01   r2 = -0.1790258069762D+01
+      in above,  r1 = -0.1617088925200D+02   r2 = -0.1562722459704D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2060443932506D+01
+      in above message,  r1 = -0.1756451162596D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2060443932506D+01   r2 = -0.1953189503912D+01
+      in above,  r1 = -0.1756451162596D+02   r2 = -0.1699879790716D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2207037382591D+01
+      in above message,  r1 = -0.1831522445357D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2207037382591D+01   r2 = -0.2096096517568D+01
+      in above,  r1 = -0.1831522445357D+02   r2 = -0.1773768468391D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2829016196733D+01
+      in above message,  r1 = -0.1965387064744D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2829016196733D+01   r2 = -0.2702583094462D+01
+      in above,  r1 = -0.1965387064744D+02   r2 = -0.1905531440363D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2988507725653D+01
+      in above message,  r1 = -0.1993551562844D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2988507725653D+01   r2 = -0.2858137355339D+01
+      in above,  r1 = -0.1993551562844D+02   r2 = -0.1933254739725D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3100845173341D+01
+      in above message,  r1 = -0.2111165862674D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3100845173341D+01   r2 = -0.2967709266965D+01
+      in above,  r1 = -0.2111165862674D+02   r2 = -0.2049029502022D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3218288200127D+01
+      in above message,  r1 = -0.2173089673548D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3218288200127D+01   r2 = -0.3082267565214D+01
+      in above,  r1 = -0.2173089673548D+02   r2 = -0.2109986324762D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3279008905849D+01
+      in above message,  r1 = -0.2303605662054D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3279008905849D+01   r2 = -0.3141499286202D+01
+      in above,  r1 = -0.2303605662054D+02   r2 = -0.2238466532584D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3604063601555D+01
+      in above message,  r1 = -0.2443642111795D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3604063601555D+01   r2 = -0.3458609616764D+01
+      in above,  r1 = -0.2443642111795D+02   r2 = -0.2376320538465D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3744830482065D+01
+      in above message,  r1 = -0.2755638712083D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3744830482065D+01   r2 = -0.3595949076546D+01
+      in above,  r1 = -0.2755638712083D+02   r2 = -0.2683451826854D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3817684921421D+01
+      in above message,  r1 = -0.2884824849609D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3817684921421D+01   r2 = -0.3667032380371D+01
+      in above,  r1 = -0.2884824849608D+02   r2 = -0.2810618798514D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3968563067352D+01
+      in above message,  r1 = -0.2974995048976D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3968563067352D+01   r2 = -0.3814248501618D+01
+      in above,  r1 = -0.2974995048976D+02   r2 = -0.2899377075046D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.4126653467568D+01
+      in above message,  r1 = -0.3770937603464D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.4126653467567D+01   r2 = -0.3969013593769D+01
+      in above,  r1 = -0.3770937603464D+02   r2 = -0.3682712665512D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.4648385818664D+01
+      in above message,  r1 = -0.4024863639402D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.4648385818664D+01   r2 = -0.4484870481002D+01
+      in above,  r1 = -0.4024863639402D+02   r2 = -0.3932544862313D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.4742862114294D+01
+      in above message,  r1 = -0.4228849910689D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.4742862114294D+01   r2 = -0.4578284482526D+01
+      in above,  r1 = -0.4228849910689D+02   r2 = -0.4133211992228D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.5040440369476D+01
+      in above message,  r1 = -0.4299587026681D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.5040440369476D+01   r2 = -0.4872522351911D+01
+      in above,  r1 = -0.4299587026681D+02   r2 = -0.4202791431674D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.5705706111121D+01
+      in above message,  r1 = -0.5362005517990D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.5705706111121D+01   r2 = -0.5530359307224D+01
+      in above,  r1 = -0.5362005517990D+02   r2 = -0.5247368200535D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.6077694808571D+01
+      in above message,  r1 = -0.5750530788160D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.6077694808571D+01   r2 = -0.5898221167179D+01
+      in above,  r1 = -0.5750530788160D+02   r2 = -0.5629141443055D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.7221454313720D+01
+      in above message,  r1 = -0.6398690390272D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.7221454313720D+01   r2 = -0.7029419014987D+01
+      in above,  r1 = -0.6398690390271D+02   r2 = -0.6265752439701D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.7889669508654D+01
+      in above message,  r1 = -0.6515066753959D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.7889669508654D+01   r2 = -0.7690379910690D+01
+      in above,  r1 = -0.6515066753959D+02   r2 = -0.6380017189827D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.8251521408736D+01
+      in above message,  r1 = -0.6633992297133D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.8251521408736D+01   r2 = -0.8048327107325D+01
+      in above,  r1 = -0.6633992297133D+02   r2 = -0.6496772852247D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.8633472280068D+01
+      in above message,  r1 = -0.7006727522356D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.8633472280068D+01   r2 = -0.8426172980601D+01
+      in above,  r1 = -0.7006727522356D+02   r2 = -0.6862628622964D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9036836712110D+01
+      in above message,  r1 = -0.7136523178412D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9036836712110D+01   r2 = -0.8825219420733D+01
+      in above,  r1 = -0.7136523178412D+02   r2 = -0.6990000743503D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9463028483097D+01
+      in above message,  r1 = -0.7830489017509D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9463028483097D+01   r2 = -0.9246866367483D+01
+      in above,  r1 = -0.7830489017509D+02   r2 = -0.7670765787134D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1039009691229D+02
+      in above message,  r1 = -0.8607028873860D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1039009691229D+02   r2 = -0.1016410280282D+02
+      in above,  r1 = -0.8607028873860D+02   r2 = -0.8432055857209D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1063865257819D+02
+      in above message,  r1 = -0.8773242858882D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1063865257819D+02   r2 = -0.1041003333718D+02
+      in above,  r1 = -0.8773242858882D+02   r2 = -0.8594941361563D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1089437773788D+02
+      in above message,  r1 = -0.9664470591248D+02
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1089437773788D+02   r2 = -0.1066306182389D+02
+      in above,  r1 = -0.9664470591247D+02   r2 = -0.9467945094414D+02
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1170704198210D+02
+      in above message,  r1 = -0.1025143594508D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1170704198210D+02   r2 = -0.1146718074342D+02
+      in above,  r1 = -0.1025143594508D+03   r2 = -0.1004256998277D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1228936937469D+02
+      in above message,  r1 = -0.1066657769627D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1228936937469D+02   r2 = -0.1204340346309D+02
+      in above,  r1 = -0.1066657769627D+03   r2 = -0.1044882666071D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1322945812026D+02
+      in above message,  r1 = -0.1110205759893D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1322945812026D+02   r2 = -0.1297366008010D+02
+      in above,  r1 = -0.1110205759893D+03   r2 = -0.1087484977447D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1578068482977D+02
+      in above message,  r1 = -0.1203879764451D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1578068482977D+02   r2 = -0.1549825534172D+02
+      in above,  r1 = -0.1203879764451D+03   r2 = -0.1179078884375D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1894565640382D+02
+      in above message,  r1 = -0.1254264110036D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1894565640382D+02   r2 = -0.1863004423649D+02
+      in above,  r1 = -0.1254264110036D+03   r2 = -0.1228319329751D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2710869801273D+02
+      in above message,  r1 = -0.1280403902863D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2710869801273D+02   r2 = -0.2670502431592D+02
+      in above,  r1 = -0.1280403902862D+03   r2 = -0.1253858947838D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2871232673155D+02
+      in above message,  r1 = -0.1334672181555D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2871232673155D+02   r2 = -0.2829076339031D+02
+      in above,  r1 = -0.1334672181555D+03   r2 = -0.1306866902081D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2955674933959D+02
+      in above message,  r1 = -0.1391724098965D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2955674933959D+02   r2 = -0.2912567646889D+02
+      in above,  r1 = -0.1391724098965D+03   r2 = -0.1362573491576D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3227493527378D+02
+      in above message,  r1 = -0.1451727668704D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3227493527378D+02   r2 = -0.3181281702450D+02
+      in above,  r1 = -0.1451727668704D+03   r2 = -0.1421140249428D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3425441439343D+02
+      in above message,  r1 = -0.1687695451081D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3425441439343D+02   r2 = -0.3376925886724D+02
+      in above,  r1 = -0.1687695451081D+03   r2 = -0.1651251908804D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.4378378287320D+02
+      in above message,  r1 = -0.1843209405623D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.4378378287320D+02   r2 = -0.4318249797219D+02
+      in above,  r1 = -0.1843209405623D+03   r2 = -0.1802738747913D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.5136831248925D+02
+      in above message,  r1 = -0.2368453322256D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.5136831248925D+02   r2 = -0.5066842696485D+02
+      in above,  r1 = -0.2368453322256D+03   r2 = -0.2313509205947D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.5483791869481D+02
+      in above message,  r1 = -0.2665784177750D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.5483791869481D+02   r2 = -0.5409116015100D+02
+      in above,  r1 = -0.2665784177749D+03   r2 = -0.2602114031020D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.5667795428505D+02
+      in above message,  r1 = -0.3083933242244D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.5667795428505D+02   r2 = -0.5590590073416D+02
+      in above,  r1 = -0.3083933242244D+03   r2 = -0.3007415043515D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.6058534160799D+02
+      in above message,  r1 = -0.3970548335644D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.6058534160799D+02   r2 = -0.5975859309649D+02
+      in above,  r1 = -0.3970548335644D+03   r2 = -0.3864826751963D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9563224722089D+02
+      in above message,  r1 = -0.5041960354429D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9563224722089D+02   r2 = -0.9426171183080D+02
+      in above,  r1 = -0.5041960354429D+03   r2 = -0.4897898559030D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9922704554692D+02
+      in above message,  r1 = -0.5325295847185D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9922704554692D+02   r2 = -0.9779592499499D+02
+      in above,  r1 = -0.5325295847185D+03   r2 = -0.5170601434500D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1029852224041D+03
+      in above message,  r1 = -0.6121613340763D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1029852224041D+03   r2 = -0.1014899088025D+03
+      in above,  r1 = -0.6121613340763D+03   r2 = -0.5936033852488D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1153300352497D+03
+      in above message,  r1 = -0.6297604924475D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1153300352497D+03   r2 = -0.1136179908785D+03
+      in above,  r1 = -0.6297604924475D+03   r2 = -0.6105010079579D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1198345754261D+03
+      in above message,  r1 = -0.7947807418113D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1198345754261D+03   r2 = -0.1180413067500D+03
+      in above,  r1 = -0.7947807418113D+03   r2 = -0.7686391451862D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1517715876574D+03
+      in above message,  r1 = -0.8188769239386D+03
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1517715876574D+03   r2 = -0.1493726538498D+03
+      in above,  r1 = -0.8188769239385D+03   r2 = -0.7916873682083D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1944862338743D+03
+      in above message,  r1 = -0.1014505309490D+04
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1944862338743D+03   r2 = -0.1912057545434D+03
+      in above,  r1 = -0.1014505309490D+04   r2 = -0.9784433055089D+03
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2310865380391D+03
+      in above message,  r1 = -0.1268981253752D+04
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2310865380390D+03   r2 = -0.2269950437485D+03
+      in above,  r1 = -0.1268981253752D+04   r2 = -0.1220507648358D+04
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2524694242769D+03
+      in above message,  r1 = -0.1448827512277D+04
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2524694242769D+03   r2 = -0.2478829734311D+03
+      in above,  r1 = -0.1448827512277D+04   r2 = -0.1391059383697D+04
  intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2640486850795D+03
+      in above message,  r1 = -0.1550172091156D+04
       t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2640486850795D+03   r2 = -0.2591881386114D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2762711129622D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2762711129622D+03   r2 = -0.2711168097111D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.2891787747875D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.2891787747875D+03   r2 = -0.2837094527891D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3028169114591D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3028169114591D+03   r2 = -0.2970095611329D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3324831011934D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3324831011933D+03   r2 = -0.3259228492299D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.3486200876123D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.3486200876123D+03   r2 = -0.3416405893417D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.4233426598484D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.4233426598484D+03   r2 = -0.4143394252024D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.6062610049223D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.6062610049223D+03   r2 = -0.5918090841222D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.9458159788668D+03
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.9458159788667D+03   r2 = -0.9197806040821D+03
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1643785999656D+04
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1643785999656D+04   r2 = -0.1589574306010D+04
- intdy--  t (=r1) illegal        
-      in above message,  r1 = -0.1754813398234D+04
-      t not in interval tcur - hu (= r1) to tcur (=r2)       
-      in above,  r1 = -0.1754813398234D+04   r2 = -0.1695685533097D+04
+      in above,  r1 = -0.1550172091156D+04   r2 = -0.1486992554306D+04
 bperp-ode.pdf
 #+end_example
 
@@ -2102,7 +2062,7 @@ bperp-ode.pdf
   def rhs(y, t):
       """Right-hand side of ODE"""
       ydot = y[1]
-      ydotdot = y[0] / (y[0]**2 + t**2)**1.5
+      ydotdot = 0.5 * y[0] / (y[0]**2 + t**2)**1.5
       return ydot, ydotdot
 
   def trajectory(tgrid, y0, ydot0=0):
@@ -2111,10 +2071,10 @@ bperp-ode.pdf
       return soln[:, 0], soln[:, 1]
 
 
-  figfile = sys.argv[0].replace(".py", ".pdf")
+  figfile = sys.argv[0].replace(".py", ".png")
 
   y0max = 10.0
-  ny0 = 1000
+  ny0 = 4000
   y0min = y0max/ny0
   y0grid_lin = np.linspace(y0min, y0max, ny0)
   ny0_log = 50
@@ -2124,17 +2084,19 @@ bperp-ode.pdf
 
 
 
-  nt = 8001
+  nt = 32001
 
   sns.set_color_codes()
   fig, ax = plt.subplots(figsize=(5, 4))
   ystack, vstack, xstack, wstack = [], [], [], []
   tgrid = np.linspace(-20, 10, nt)
+  dt = tgrid[1] - tgrid[0]
   for y0 in y0grid:
-      y, v = trajectory(tgrid, y0)
+      t = tgrid + np.random.random(len(tgrid))*0.8*dt
+      y, v = trajectory(t, y0)
       ystack.append(y)
       vstack.append(v)
-      xstack.append(-tgrid)
+      xstack.append(-t)
       if y0 in y0grid_lin:
           # weight by 1/r
           wstack.append(y0/y)
@@ -2163,19 +2125,21 @@ bperp-ode.pdf
   # find density by binning
   xmin, xmax = -8.0, 1.5
   ymin, ymax = -1.2, 7.0
-  H, xe, ye = np.histogram2d(xstack.ravel(), ystack.ravel(), bins=(95, 82), weights=wstack.ravel(),
+  H, xe, ye = np.histogram2d(xstack.ravel(), ystack.ravel(),
+                             bins=(4*95, 4*82), weights=wstack.ravel(),
                              range=[[xmin, xmax], [ymin, ymax]])
-  Hm, xe, ye = np.histogram2d(xstack.ravel(), -ystack.ravel(), bins=(95, 82), weights=wstack.ravel(),
+  Hm, xe, ye = np.histogram2d(xstack.ravel(), -ystack.ravel(),
+                              bins=(4*95, 4*82), weights=wstack.ravel(),
                               range=[[xmin, xmax], [ymin, ymax]])
 
   H += Hm
   H0 = H[-1, -1]
   ax.imshow(H.T, origin='lower', extent=[xmin, xmax, ymin, ymax],
-            vmin=0.0, vmax=2*H0, cmap='magma')
+            vmin=0.0, vmax=3*H0, cmap='gray_r')
 
 
-  ax.plot(-tgrid, yshape)
-  #ax.plot(tgrid, np.sqrt(6*tgrid), lw=0.5)
+  ax.plot(-tgrid, yshape, lw=0.0)
+
   ax.plot(-p1(yext**2), yext, lw=0.5, ls="--")
   ax.plot(-p2(yext), yext, lw=0.5, ls="--")
 
@@ -2191,10 +2155,11 @@ bperp-ode.pdf
   #ax.legend(fontsize="small", ncol=2)
 
   ax.set_aspect("equal")
-  ax.set(xlim=[-8.0, 1.5], ylim=[-1.2, 7.0], xlabel="$x$", ylabel="$y$")
+  ax.set(xlim=[-8.0, 1.5], ylim=[-1.2, 7.0],
+         xlabel="$x / R_{**}$", ylabel="$y / R_{**}$")
   sns.despine()
   fig.tight_layout()
-  fig.savefig(figfile)
+  fig.savefig(figfile, dpi=600)
 
   print(figfile, end="")
 #+END_SRC
@@ -2205,4 +2170,4 @@ bperp-ode.pdf
 #+END_SRC
 
 #+RESULTS:
-[[file:bperp-shape.pdf]]
+[[file:bperp-shape.png]]
