@@ -255,12 +255,10 @@ class Trajectory3d(object):
         sns.set_style('ticks')
         sns.set_color_codes('deep')
         fig, (ax, axp) = plt.subplots(2, 1, figsize=(4, 6))
-        ax.plot(self.t - t0, self.x/self.Rsd, label=r'$x/R_\mathrm{sd}$')
+        ax.plot(self.t - t0, self.x/self.Rsd, label=r'$x/R_\dag$')
         ax.plot(self.t - t0, self.VX, label='$v_x / v_{\infty}$', lw=1.0)
-        ax.plot(self.t - t0, self.y/self.Rsd, label=r'$y/R_\mathrm{sd}$')
+        ax.plot(self.t - t0, self.y/self.Rsd, label=r'$y/R_\dag$')
         ax.plot(self.t - t0, self.VY, label='$v_y / v_{\infty}$', lw=1.0)
-        ax.plot(self.t - t0, self.z/self.Rsd, label=r'$z/R_\mathrm{sd}$')
-        ax.plot(self.t - t0, self.VZ, label='$v_z / v_{\infty}$', lw=1.0)
         #ax.plot(t - t0, wdrift, ls='--', label='$w_\mathrm{drift} / v_{\infty}$')
 
         ax.axhspan(0.0, 1.0, color='k', alpha=0.1)
@@ -317,7 +315,7 @@ if __name__ == "__main__":
 
 
     traj = Trajectory3d(STAR, VINF, LOGN, GRAIN, A, THETAB)
-    traj.integrate(Y0, Z0)
+    traj.integrate(Y0, Z0, Xstart=3.0, tstop=20.0)
     yz_id = f"Y{int(1000*Y0):04d}-Z{int(1000*Z0):04d}"
     traj.savedata(f"data/frozen-{yz_id}")
     traj.savefig(f"figs/frozen-{yz_id}")
