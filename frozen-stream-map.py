@@ -28,10 +28,14 @@ stream_id += f"-{GRAIN}{int(100*A):03d}"
 stream_id += f"-th{int(THETAB):03d}"
 stream_id += f"-Z{int(1000*Z0):04d}"
 
+traj = Trajectory3d(STAR, VINF, LOGN, GRAIN, A, THETAB)
+xmin, xmax = -3*traj.Rsd/ZOOM, 3*traj.Rsd/ZOOM
+ymin, ymax = -3*traj.Rsd/ZOOM, 3*traj.Rsd/ZOOM
+
 # Impact parameter grid
-N = 5
+N = 1
 ny0 = N*400 + 1
-y0grid = 0.001 + np.linspace(-3.0/ZOOM, 3.0/ZOOM, ny0)
+y0grid = 0.001 + np.linspace(ymin/traj.Rsd, ymax/traj.Rsd, ny0)
 
 # Grid to save R(theta)
 nth = 200
@@ -48,45 +52,45 @@ ylocus = rm*np.sin(thm_grid)
 # wp is extra weight for plotting
 xx, yy, ww, wp = [], [], [], []
 xs, ys = [], []
-traj = Trajectory3d(STAR, VINF, LOGN, GRAIN, A, THETAB)
-nt, tstop, Xstart = 2001, 15.0, 3.0/ZOOM
+nt, tstop, Xstart = 1001, 30.0, 3.0/ZOOM
 for iy0, y0 in enumerate(y0grid[::-1]):
     traj.integrate(y0, Z0, Xstart=Xstart, tstop=tstop, nt=nt)
 
+    tfine = np.linspace(traj.t[0], traj.t[-1], 10*nt)
+    xfine = np.interp(tfine, traj.t, traj.x)
+    yfine = np.interp(tfine, traj.t, traj.y)
     # Accumulate (x, y) points in a long list
-    xx.extend(traj.x)
-    yy.extend(traj.y)
+    xx.extend(xfine)
+    yy.extend(yfine)
     # Now slab symmetry, so natural weights are unity
-    weight = np.ones_like(traj.x)
+    weight = np.ones_like(xfine)
     ww.extend(weight)
     # De-accentuate large radii for plotting
-    r = np.hypot(traj.x, traj.y)
+    r = np.hypot(xfine, yfine)
     wp.extend(weight/r)
     
-    if iy0 % 30 == 15:
+    if iy0 % 10*N == 5*N:
         # Save streamlines for selected impact parameters
         xs.append(traj.x)
         ys.append(traj.y)
 
 # Use the last trajectory for getting the model parameters
 
-xmin, xmax = -3*traj.Rsd/ZOOM, 3*traj.Rsd/ZOOM
-ymin, ymax = -3*traj.Rsd/ZOOM, 3*traj.Rsd/ZOOM
 
 figfile = sys.argv[0].replace(".py", "-" + stream_id + ".pdf")
 sns.set_color_codes()
 fig, ax = plt.subplots(figsize=(5, 5))
 
 # Plot a density histogram of all the (x, y) points we accumulated
-H, xe, ye = np.histogram2d(xx, yy, bins=(100, 100), weights=wp,
+H, xe, ye = np.histogram2d(xx, yy, bins=(200, 200), weights=wp,
                            range=[[xmin, xmax], [ymin, ymax]])
-Hd, xe, ye = np.histogram2d(xx, yy, bins=(80/1, 50/1), weights=ww,
+Hd, xe, ye = np.histogram2d(xx, yy, bins=(200, 200), weights=ww,
                            range=[[xmin, xmax], [ymin, ymax]])
-rho_med = np.median(H)
-rho_max = H.max()
+rho_med = np.median(Hd)
+rho_max = Hd.max()
 # rho_scale = np.sqrt(rho_med*rho_max)
-rho_scale = rho_max
-ax.imshow(H.T, origin='lower', extent=[xmin, xmax, ymin, ymax],
+rho_scale = 10*rho_med
+ax.imshow(Hd.T, origin='lower', extent=[xmin, xmax, ymin, ymax],
           vmin=0.0, vmax=rho_scale, cmap='gray_r')
 
 # Scatter-shot grain cohorts to show evolution
@@ -112,8 +116,9 @@ for x, y in zip(xs, ys):
     ax.plot(x, y, '-', color='k', lw=0.8)
     for x1, color in zip(x1s, colors):
         itime = int((Xstart - x1/ZOOM)*nt/tstop)
-        ax.plot(x[itime-10//ZOOM:itime+20//ZOOM:10//ZOOM],
-                y[itime-10//ZOOM:itime+20//ZOOM:10//ZOOM],
+        dtime = int(5/ZOOM)
+        ax.plot(x[itime-dtime:itime+2*dtime:dtime],
+                y[itime-dtime:itime+2*dtime:dtime],
                 '.', ms=4.0, color=color, zorder=20-x1)
 
 
