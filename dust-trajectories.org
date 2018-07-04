@@ -2213,3 +2213,13 @@ bperp-ode.pdf
 
 #+RESULTS:
 [[file:bperp-shape.png]]
+
+
+** Magnetic stream map figures for paper
+
+#+BEGIN_SRC sh :eval no
+  time python frozen-stream-map.py MS10 40 1.0 gra 0.02 10 0.0
+  time python frozen-stream-map.py MS10 80 1.0 gra 0.02 10 0.0
+  time python frozen-stream-map.py MS10 40 1.0 gra 0.02 75 0.0 0.6
+  time python frozen-stream-map.py MS10 80 1.0 gra 0.02 75 0.0 0.6
+#+END_SRC

@@ -39,13 +39,10 @@ y0grid = 0.001 + np.linspace(ymin/traj.Rsd, ymax/traj.Rsd, ny0)
 
 # Grid to save R(theta)
 nth = 200
-thm_grid = np.linspace(0.0, 2*np.pi, nth)
-dth = np.pi/nth
+thm_grid = np.linspace(-np.pi, np.pi, nth)
 
-# Parabola for showing bow shock
-rm = 2.0/(1.0 + np.cos(thm_grid))
-xlocus = rm*np.cos(thm_grid)
-ylocus = rm*np.sin(thm_grid)
+# Wilkinoid for showing bow shock
+rm = np.sqrt(3*(1 - thm_grid/np.tan(thm_grid)))/np.abs(np.sin(thm_grid))
 
 # (x, y) coordinates are in parsec
 # w is weight because of geometry
@@ -135,9 +132,9 @@ for xx in np.linspace(1.5*xmin, 1.5*xmax, 15):
 
     
     
-# Plot inner bow shock as a parabola, but with Pi = Lambda = 1.7
+# Plot inner bow shock as a Wilkinoid
 ax.plot(traj.stream.R0*rm*np.cos(thm_grid),
-        (1.7/2.0)*traj.stream.R0*rm*np.sin(thm_grid),
+        traj.stream.R0*rm*np.sin(thm_grid),
         ':', color='k', alpha=0.5, lw=2)
 
 # Plot R_dag: rip radius
