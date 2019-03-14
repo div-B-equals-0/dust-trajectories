@@ -2214,7 +2214,7 @@ bperp-ode.pdf
 #+RESULTS:
 [[file:bperp-shape.png]]
 
-
+s
 ** Magnetic stream map figures for paper
 
 #+BEGIN_SRC sh :eval no
@@ -2223,3 +2223,293 @@ bperp-ode.pdf
   time python frozen-stream-map.py MS10 40 1.0 gra 0.02 75 0.0 0.6
   time python frozen-stream-map.py MS10 80 1.0 gra 0.02 75 0.0 0.6
 #+END_SRC
+
+* Calculating radiative turnaround radius
++ For the well-coupled case, we have
+  + R_{\star\star} = 2 \tau_* R_*
+  + R_{\star\star} / pc = 0.0393 \kappa_600 L_4 / v_10^2 
++ For the single-grain case we have
+  + R_{\star\star} = 2 (\kappa_d/\kappa) \tau_* R_*
++ In II-\S5 we normalize a by \micro{}m and \rho in g/cm^3
+  + \kappa_d = Q \pi a^2 / (4 \pi a^3 \rho_d / 3) = 0.75 Q / \rho_d a
+  + \kappa_d = 7500 Q / \rho_d a_\micro
++ Hence single-grain R_{\star\star} / pc = 0.4912 (L_4 / v_10^2) (Q / \rho_d a_\micro)
++ Compare with rip-point radius:
+  + R_\dag = v_10 R_* / sqrt(\Xi_\dag)
+
+* Survey of literature on grain dynamics
+Some of this will end up in introduction and/or discussion of Paper II
+
+** Bow shocks
++ Katushkina:2017a, Katushkina:2018a
+
+
+** Compare Lorentz force and radiation and drag force
++ In the paper, I do everything in terms of Larmor radius, but in order to compare with Katushkina:2018a I need to explicitly consider the Lorentz force
++ We can put it terms of the fiducial force - 2 n k T \pi a^2
++ f_B = z_d e w_\perp B / c
++ \phi = e^2 z_d / a k T => z_d e = a k T \phi / e
++ We can also use r_B = m_d c w_\perp / z_d e B
+  + f_B = m_d w_\perp^2 / r_B
+
+
+** Summary of Katushkina papers
+
+*** Katushkina:2017a
++ Considers *only* Lorentz force on grains
+  + No drag, no radiation
++ Initially, w = 0, so no Lorentz force
++ Charge is assumed constant
++ Everything is normalized to R_0 stand-off distance of astropause
++ Parallel and perpendicular B fields
+  + Quite low mach numbers: 1.5 in \perp, 1.89 in \parallel
+  + Alfven Mach number 1.77, so \beta \sim 1
++ The outer shell is extremely thick in \perp case: R_BS = 5 R_0
++ At BS, gas decelerates, but not dust.
+  + Giving non-zero w, which produces Lorentz force and gyration
++ For \perp case, B field is in x direction, and axis is z direction
+  + At shock, we get a w_z, which generates gyromotion in y-z plane
+  + This gives as oscillation in v_z about the mean decelerating plasma flow
+  + Which in turn gives a spatial oscillation in density
+    + Gives filaments prependicular to axis
+  + Spatial period is v_plasma T_gyro
+    + This gets smaller as approach astropause, mainly because v_plasma decreases
++ For \parallel B case, similar mechanism operates in the wings because gas velocity and B field are refracted by BS, so grain inertia means it has component \perp to post-shock gas flow (which runs parallel to B field always)
+
+
+*** Katushkina:2018a
++ Like the previous paper, but with detailed application to \kappa Cas
+  + Uses distribution of dust sizes
+  + And calculates emission from grains with radiative equilibrium T
+    + Although they have to tweak that a bit
++ Again assumes fixes charge (and rather low)
++ And again seems to not include the radiative force
+  + Although they claim that this would repel small grains, so they are only using large ones (a > 0.2 \micro{}m)
+  + I suspect that what they have done is to calculate R_{\star\star}
+    + Yes, that is consistent with their claim:
+      #+BEGIN_QUOTE
+      Stellar radiation force is especially important for small dust grains with radii rd ≤ 0.1 μm. These dust grains are swept out far away by the stellar radiation and do not cross the BS. 
+      #+END_QUOTE
+    + In [[id:BD6436D2-E9A0-4F85-BC6E-5730459F1275][\kappa Cas from Katushkina:2018a]] in [[file:~/Dropbox/dust-wave-case-studies/dust-wave-case-studies.org][file:~/Dropbox/dust-wave-case-studies/dust-wave-case-studies.org]] I have calculated the relevant radii and indeed, you need a > 0.2 micron to cross the bow shock at about 3 pc
+      + 
+    + /However/, if the grains were not collisionally coupled, then the radiation would become very important near the astropause, even for largish grains
+    + It would be like the perpendicular drag-free case in II-\S3.3.1
+      + The magnetic field can pull grains in to R < R_{\star\star} on the axis, but they are accelerated to high velocities along the field lines by the radiation force
+  + But that is not really relevant, since the grains /should/ be well-coupled, based on the \Xi = 40 that I calculate
+    + Rip point would be at R_\dag = 0.31 pc << R_0 = 0.75 pc
+
+*** Critique of Katushkina papers
++ They are wrong to ignore drag force, since it is important:
+  + /Olga says they included radiation force./ The radiation force is important at distances less than about 2 R_{\star\star}, which means at the AP (0.75 pc) it is important for all grains < 2 microns
+  + The only way that grains can get near R_0 (\ll R_{\star\star}) is by coupling to plasma
+    + Pure-magnetic coupling would give a cavity like in my drag-free models
+    + More likely there is Coulomb coupling - for \Xi = 20 we get \phi = 8 or U = 7 V
+    + They are assuming U \approx 1 V, which is fine for neutral ISM, but not for H II regions 
+
+
+
+** Grain destruction mechanisms
+
+*** Sublimation
++ From Fig A1 of Paper III gives U = 1e9 where sublimation becomes important.
++ U = 3.82 n T_4 \Xi
++ So, for DDW, sublimation requires n > 1e9 / 3.82 T_4 \Xi_\dag
++ => n > 2.6e5 pcc
++ On the other hand, we also need \tau_* < \tau_{*,max} for DW
++ => 0.0089 \kappa_600 (L_4 n)^{1/2} / v_10 < 0.5 v_10 / sqrt(\Xi_\dag)
++ => v_10^4 > (0.56 \kappa_600)^2 L_4 n
++ v_10^4 > 8.15e4 \kappa_600^2 L_4
++ v_10 > 16.9 \kappa_600^0.5 L_4^0.25
+
+*** Particle sputtering
++ This is what I have already looked at under the Draine:2011a heading
++ Requires slip velocities above 75 km/s for sputtering by He ions
+  + This does not necessarily need v_\infty so high, since w_max = 2-3 v_\infty
++ And need to traverse column density of 2e21 a_\micro cm^-2
++ I got a column of 3e18 cm^-2 from taking \approx 10 n R_\dag
+  + Factor of 10 comes from multiple crossings or lingering at equilibrium drift
++ This means that grains smaller than 0.0015 micron = 1.5 nm would be destroyed [2019-02-02 Sat]qby sputtering
+
+*** Photosputtering
++ energy of He ion at 75 km/s = 117 eV = 8.6 Ryd = 106 \AA = 0.1 keV
++ So this is hard to get from an O star
+
+*** Radiative torques
+
+** TODO Dust decoupling in H II regions
++ Gail:1979a
+  + Has decoupling due to low grain charge
++ Draine:2011a
+  + Although mainly assumes coupling, he does talk about drift
+  + Also gives good history from Kahn:1954a onwards
+    + Should check out Matthews:1967a and Matthews:1969a
+    + Dopita:2003a, Dopita:2006a should not be forgotten
+  + Fig 8 turns out to be equivalent of our Cloudy graphs - drift velocity versus distance, showing discontinuity at sonic drift speeds
+  + Also considers Lorentz forces in sec 4.2
+  + Sec 4.3 considers drift timescales
+  + Finds that in dense regions, drift can remove grains fast enough to maybe change dust-gas ratio
+  + Sputtering (sec 4.4) is interesting - shows that drift velocities > 75 km/s can lead to dust destruction by He ions
+    + But needs to traverse a column density of 2e20 a_-5 cm^-2
+    + a_-5 is grain size in units of 0.1 micron = 100 nm = 1000 \AA
+    + Whereas in our models, column will be of order n R_\dag or n v_\infty t
+      - In our Fig 15 we have equilibrium drift for about 2000 years (w = 80), which follows decoupling for 500 years with (w = 80 to 200)
+      - v_\infty = 80 km/s and n = 10 => column = 6.3e18 cm^-2 
+      - This is for a = 0.02 \micro{}m so sputtering column is 4e19 cm^-2
+      - So, such grains will not be destroyed in dust wave
+      - For the v_\infty = 40 km/s we get pulses where w > 75 km/s
+        - But there are only two of them with durations about 500 yr
+          each (roughly half of each duty cycle)
+      - Putting in numbers, R_\dag = v_10 \Xi_\dag^{-1/2} R_* => n R_\dag = n v_10 R_* \Xi_\dag^{-1/2}
+        - R_*/pc = 2.21 sqrt(L_4/n) / v_10
+        - => column = 2.21 sqrt(L_4 n / \Xi_\dag) pc = 2.15e17 sqrt(L_4 n)
+        - That probably needs to get multiplied by 1/sin\theta_B to account for the magnetically pinned lingering, which would make it consistent with what I got from the graphs
+          - => 3.1e18, which is close enough to the 6e18 I got above
+      - *Conclusion* Sputtering not important
++ Akimkin:2015a, Akimkin:2017a
+  + In Akimkin:2017a they find that dust decouples from the gas in inner zone of H II region, allowing gas to fill in the hole that occurs in models that assume perfect coupling (Draine:2011a, Akimkin:2015a)
+  + The decoupling is more pronounced for lower effective T, which is the equivalent of our finding that \Xi_\dag is lower for B stars than for O stars due to less effective grain charging.
+  + One shortcoming of their simulations is that they assume that the grain can instantaneously achieve the equilibrium drift velocity given by the local conditions
+    + Acceleration length: s = w^2 / a
+    + Compare with radius of rip: R_\dag
+      + \Xi = (L / 4 \pi R^2 c) / (2 n k T)
+      + R = sqrt( L / 4 \pi c 2 n k T \Xi )
+    + a = L \kappa_d / 4 \pi R^2 c
+      + \Xi = (a / \kappa_d) / \rho c^2
+      + => accel at rip point a_\dag = \kappa_d \rho c_s^2 \Xi_\dag
+      + accel length at rip point s_\dag = (w^2/c_s^2) / \kappa_d \rho \Xi_\dag
+    + R_\dag = sqrt( L / 4 \pi c \rho c_s^2 \Xi_\dag)
+    + We can define a thermal R_*, which is where radiation pressure = gas pressure
+    + R_*^therm = sqrt( L / 4 \pi c \rho c_s^2) = 2.21 sqrt(L_4/n) if c_s = 10 km/s
+    + So R_\dag = R_*^therm \Xi_\dag^{-1/2}
+    + Therefore s_\dag / R_\dag = (w^2/c_s^2) / \kappa_d \rho R_*^therm \Xi_\dag^{1/2}
+    + On average \kappa_d = \kappa / Z_d, so \kappa_d \rho R_*^therm = \tau_*^therm / Z_d
+    + \tau_*^therm = 0.0089 \kappa_600 sqrt(L_4 n)
+    + Finally:
+      + s_\dag / R_\dag = (w^2/c_s^2) Z_d / \tau_*^therm \Xi_\dag^{1/2}
+      + So, taking \Xi_\dag = 1000, Z_d = 0.01, (w^2/c_s^2) = 10 we get
+        + s_\dag / R_\dag \approx 10 0.01 / 0.0089 sqrt(1000) = 0.355 / \kappa_600 sqrt(L_4 n)
+    + /Conclusion/  inertial effects s_\dag and R_\dag are of same order
+
++ Ishiki:2018a
++ Hoang:2018a
+  + [ ] RATD - work out timescale to see if it could work
+    + Things are given in terms of U
+    + We have U = 3.82 n T_4 \Xi
+      + U_\dag \approx 3800 n
+      + Check for consistency
+        + Hoang uses u_isrf = 8.64e-13 erg/cm^3 => c u_isrf = 0.0259
+        + This is close enough to the 0.0217 from MMP83
+    + RATD timescale Hoang:2018b eq (31) is 1e5 U^-1 S_{max,7}^{1/2} a_{-5}^{-0.7} yr
+    + So, if we have U = 1e4 then this is 10 yr - very short!
+    + Problem then is that RATD would destroy grains before they got to dust wave
+    + But that is for composite grains, that have low strength S_max = 1e7 erg/cm^3
+    + Hoang:2018a have 1e9 as a typical value for polycrystalline grains
+      + Diamond has 1e11
+    + Assuming FIR damping dominates, we have disruption threshold of U
+      + U > 118 \gamma^-3 a_-5^-8.1 \lambda_0.5^5.1 S_9^1.5
+      + Where \gamma measures anisotropy of radiation
+        + \gamma = 1 for unidirectional 
+      + And \lambda_0.5 is max of stellar spectrum, so should be about 0.15 micron for O stars, so \lambda_0.5 = 0.3
+      + Hence U > 0.254 a_-5^-8.1 S_9^1.5
+      + Or a_-5 = (4 U)^-0.123 or a_nm = 100 (4 U)^-0.123 S_9^0.185
+        |    U | a_max (nm) | t, yr |   R_pc |
+        |------+-----------+-------+-------|
+        |    1 |    84.323 | 3.5e6 | 3.834 |
+        |   10 |    63.525 | 4.3e5 | 1.212 |
+        |  100 |    47.857 | 5.3e4 | 0.383 |
+        | 1000 |    36.053 | 6.4e3 | 0.121 |
+        |  1e4 |    27.161 | 7.9e2 | 0.038 |
+        |  1e5 |    20.462 | 9.6e1 | 0.012 |
+        |  1e6 |    15.415 | 1.2e1 | 0.004 |
+        #+TBLFM: $2=100 (4 $1)**-0.123 ;f3::$3=3.52e6 $1**(-0.912666) ; s2::$4=sqrt(14.7 /$1);f3
+      + Spin up time \approx damping time
+        + \tau_damp = 2.2e5 a_-5^2 U^{-2/3} yr
+          + This is a mistake in text, which gives U^{2/3} 
+        + Putting in the maximum a from above, we get
+          + \tau_damp = 3.52e6 U^{-0.912666} yr
+      + Dynamic time is R/v_\infty for general distance
+        + U = 14.7 L_4 / R_pc^2
+          + R_pc = sqrt(U/ 14.7 L_4)
+        + So putting that in above: \tau_damp = 3.02e5 R_pc^1.825 / L_4^0.913 yr
+        + t_d = 9.78e4 R_pc / v_10 yr
+          + t_d = 2.55e5 sqrt(U_2/L_4) / v_10 yr
+      + So, spin up is slower than dynamic time at large distances
+        + Equal when R_pc^0.825 = 0.324 L_4^0.913 / v_10
+        + R_pc = 0.255 L_4^1.1 / v_10^1.21
+        + This is quite large compared with typical bow radii
+      + Dynamic time at rip point is is R_\dag/v_\infty
+        + R_\dag = v_10 \Xi_\dag^{-1/2} R_*
+        + R_*/pc = 2.21 sqrt(L_4/n) / v_10
+        + => R_\dag = 2.21 sqrt(L_4/n \Xi_\dag) pc
+        + t = 2.16e5 sqrt(L_4/n \Xi_\dag) / v_10 yr
+      + We could redo this at constant grain size - might be clearer
+      + We can't use damping time now, since that is time to spin up to equilibrium frequency, which will be much much faster than break-up for large grains
+      + Instead, we have from eq (30)
+        + \omega_dis / 2 \pi = 5.8e8 a_-5^-1 S_9^0.5 per second
+        + t = I \omega_dis / \Gamma_RAT
+        + I = 8 \pi \rho a^5 / 15 = 5.03e-25 \rho hat a_-5^5 where \rho hat = \rho / 3 g cm^-3 
+        + \Gamma_RAT = π a^2 γ u_rad (\lambda bar/2π) Q_Γ
+          + \lambda \approx 1000 \AA
+          + Q_\Gamma = 2 (\lambda bar / a)^-2.7 for a < \lambda bar / 1.8
+          + Q_\Gamma = 0.4 for a >  \lambda bar / 1.8
+          + So \Gamma_RAT = 6.9e-23 a_-5^4.7 \gamma \lambda_0.5^-1.7 (U_6/1.2) for small grains, a < \lambda bar / 1.8
+          + I agree with this, except I get a coefficient of 6.72e-23
+        + This gives t \propto a^5 a^-1 / a^4.7 \propto a^-0.7 and \propto \rho S_9^0.5  \lambda_0.5^1.7 (U_6/1.2)^-1 \gamma^-1
+          + t = 4.23e6 a^-0.7 \rho hat S_9^0.5  \lambda_0.5^1.7 (U_6/1.2)^-1 \gamma^-1 s
+          + 4.23e6 s = 49 days
+          + Hoang:2018a has 307 days and  \lambda_0.5^2.7  - not sure why the difference
+          + Putting it in years and with U_2 = U/100 we have
+            + t = 1.2 4.23e6 / 1e-4 yr = (1600 yrs) a^-0.7 S_9^0.5  \lambda_0.5^1.7 U_2^-1
+            + Or with  \lambda_0.5 = 0.2, t = 100 S_9^0.5 U_2^-1 years
+        + Table
+          |    U | t(2 \micro), yr | t(0.2 \micro), yr | t(0.02 \micro), yr |
+          |------+------------+--------------+---------------|
+          |    1 |     1.23e3 |       6.16e3 |        3.09e4 |
+          |   10 |     1.23e2 |       6.16e2 |        3.09e3 |
+          |  100 |     1.23e1 |       6.16e1 |        3.09e2 |
+          | 1000 |     1.23e0 |       6.16e0 |        3.09e1 |
+          |  1e4 |    1.23e-1 |      6.16e-1 |        3.09e0 |
+          |  1e5 |    1.23e-2 |      6.16e-2 |       3.09e-1 |
+          #+TBLFM: $2=100 20**-0.7 100/ $1;s3::$3=100 2**-0.7 100/ $1;s3::$4=100 0.2**-0.7 100/ $1;s3
+      + These are very short t < 100 years to destroy 2 micron grain at U > 10
++ Size dependence
+  + Everyone finds that it is larger grains that can be swept out of H II regions
+  + But in  our case, it is not so simple - larger grains have more inertia, so just carry on careening into the bow shock, even after rip 
+** Dust decoupling in the ISM and molecular clouds
+In molecular clouds: \citep{Hopkins:2016a, Lee:2017a} say they
+decouple. \citet{Tricco:2017a} says they don't.  But then
+\citet{Mattsson:2019a} say they do.
+
+** Resonant Drag Instability
++ Squire:2018a
+  + RDI occurs when w projected along any direction is equal to phase speed of some wave
+  + So occurs whenever w > c_s
+  + Or in MHD case, for any w at all (Hopkins:2018a)
++ Hopkins:2018c consider several different drag laws, including the Coulomb one
+  + They talk about a "decoupling instability" sec 3.3
+    + This is when coupling becomes weaker as slip velocity increases
+    + As is case for superthermal coulomb drag
+  + But they dismiss it 
+    #+BEGIN_QUOTE
+    however, in this regime Coulomb drag will never real- istically dominate over Epstein or Stokes drag, so we do not expect this instability to be physically relevant.
+    #+END_QUOTE
+  + They are wrong about this if the grain potential is high enough
+    + Except I think that in that paper they are talking about cases when Lorentz force is unimportant, so maybe they were not wrong
++ Hopkins:2018a talk more about charged grains
+  + Their sec 9.1.4 talks about drift velocities under radiation forces
+    + w_drift ~ t_s a where a is acceleration and t_s is stopping time from drag
+    + They give w/c = Q_abs e_rad/e_therm
+    + Where e_rad/e_therm is basically the same as my \Xi
+    + They say it is 800 L_6  / R_pc^2 T_4 n which looks about right
+    + In 9.1.5 they say
+      #+BEGIN_QUOTE
+      If the drift is super-sonic, Epstein drag always dominates Coulomb,
+      #+END_QUOTE
+      + But this is only true if they are talking about equilibrium drift
+      + And even then, there is the electron coulomb drag, which can dominate in the supersonic regime if \phi  > 10
+    + In 9.2.3 they talk about different instability regimes in H II regions
+      + Critical radius that divides subsonic from supersonic drift
+      + This is r_pc = 0.5 L_6^{1/2} n^{−1/2}, which means \Xi = 3200
+      + So this is the rip point!
+      + They refer to Draine:2011a and Akimkin:2015a to back this up
+    + So this means that the rip point is not something new, exactly

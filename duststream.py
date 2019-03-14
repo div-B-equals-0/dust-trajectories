@@ -16,7 +16,7 @@ class DustStream(object):
         self.vinf = vinf
         self.n = n
         self.T = T
-        self.kappa = 600.0            # cm^2 / g
+        self.kappa = kappa            # cm^2 / g
         self.cs = 11.4*np.sqrt(T/1e4) # km / s
         self.taustar = 0.0089*(kappa/600.0)*np.sqrt(L4*n)*(10.0/vinf)
         self.Rstar = 2.21*np.sqrt(L4/n)*(10.0/vinf)  # pc
