@@ -2233,9 +2233,24 @@ s
 + In II-\S5 we normalize a by \micro{}m and \rho in g/cm^3
   + \kappa_d = Q \pi a^2 / (4 \pi a^3 \rho_d / 3) = 0.75 Q / \rho_d a
   + \kappa_d = 7500 Q / \rho_d a_\micro
++ For a_\micro = 0.02, Q = 1.5, \rho_d = 3 => \kappa_d = 1.875e5
+  + => \kappa/\kappa_d = 3.2e-3 \kappa_600
 + Hence single-grain R_{\star\star} / pc = 0.4912 (L_4 / v_10^2) (Q / \rho_d a_\micro)
 + Compare with rip-point radius:
   + R_\dag = v_10 R_* / sqrt(\Xi_\dag)
+
+* Density limits at the velocity threshold 
++ v_min = sqrt(\Xi_\dag \eta_w)
++ If we substitute v = v_min from (28) in (31) we get
+  + \tau_{*,max} = 0.5 sqrt(\Xi_\dag \eta_w) /sqrt(\Xi_\dag) = 0.5 \eta_w^0.5
++ And then in (30)
+  + \tau_{*,min} = 0.5 (\kappa/\kappa_d) \eta_w^0.5
++ Where \tau_* = 0.0089 \kappa_600 sqrt(L_4 n) / v_{10}
+  + = 0.0089 \kappa_600 sqrt(L_4 n / \Xi_\dag \eta_w)
+  + => n = 1.26e4 \tau_*^2  \Xi_\dag \eta_w / L_4 \kappa_600^2 
++ So, n_max = 3150 \Xi_\dag \eta_w^2 / L_4 \kappa_600^2
++ And n_min = (\kappa/\kappa_d)^2 n_max
+  + So for the 0.02 \micro{}m example from above, we get n_min = 1e-5 n_max, then 1 dex gets used up in the curved corner, so we actually have 4 dex range
 
 * Survey of literature on grain dynamics
 Some of this will end up in introduction and/or discussion of Paper II
@@ -2328,15 +2343,77 @@ Some of this will end up in introduction and/or discussion of Paper II
 + And need to traverse column density of 2e21 a_\micro cm^-2
 + I got a column of 3e18 cm^-2 from taking \approx 10 n R_\dag
   + Factor of 10 comes from multiple crossings or lingering at equilibrium drift
-+ This means that grains smaller than 0.0015 micron = 1.5 nm would be destroyed [2019-02-02 Sat]qby sputtering
++ This means that grains smaller than 0.0015 micron = 1.5 nm would be destroyed by sputtering
 
 *** Photosputtering
 + energy of He ion at 75 km/s = 117 eV = 8.6 Ryd = 106 \AA = 0.1 keV
 + So this is hard to get from an O star
++ For the 40 Msun model, the cloudy output says
+  + L = 2.22e5 Lsun = 8.48e38 erg/s
+  + L(X-ray) = 6.435e29 erg/s  = 1.6e-4 Lsun - very low!
+    + But the wind will have a higher luminosity
+    + Order 1e-7 L_* = 0.022 Lsun
+    + Even higher in th1C: 1 Lsun
+  + Q(4-20 Ryd) = 7.14e42 /s
+    + This implies L \approx 6.23e32 = 0.16 Lsun
+    + But some presumably is in the 4-8 Ryd = 60-120 eV range that might not be enough for photosputtering
++ Yields for He+ sputtering are order Y = 0.01 to 0.1 so we can assume same for photo-sputtering
++ From my Henney:2010a paper I have
+  + F_ab = F_phot Q_abs Y is ablative particle flux
+  + Mdot = \pi a^2 F_phot Q_abs Y m_ab
+  + We can assume m_ab(Si) = 28 m_p
+  + So destruction timescale: t = m_d / Mdot
+  + t = (4 \pi / 3) a^3 \rho_d / \pi a^2 F_phot Q_abs Y m_ab
+    + Put \rho_d in g/cm^3; L_X in L_\odot; R in pc and assume 120 eV
+    + F_phot = 2.09e6 L_X R_pc^-2 /cm^2
+  + t = (430 yr) a_\mu \rho_d R_pc^2 / L_X Q_abs Y
+  + This is really short!
+    + If we put L_X = 1e4 1e-7 X_-7 L_4, then we can multiply by 1000
+    + t = (4.3e5 yr) a_\mu \rho_d R_pc^2 / L_4 X_-7 Q_abs Y
++ But I am no longer convinced that photo-sputtering will happen
+  + X-rays should deposit energy by ejecting inner shell electrons
+  + So drop it
 
 *** Radiative torques
++ First proposed by Dolginov:1976a
++ Draine:1996b did numerical simulations with DDSCAT
++ Lazarian:2007a found that grain helicity was the important factor
++ What I don't understand is that Lazarian:2007a talk about both low-J and high-J attractors in phase space
+  + But Hoang:2018a don't mention the low-J ones, which presumably correspond to not spinning very fast
+  + They do say that the high-J states are more robust because they aren't affected by thermal fluctuations
++ Tensile strength S_max is 1e9 erg/cm^3 in Hoang:2018a
+  + But other sources say 1e10
++ In my calculations below ([[id:59F20EBD-7A63-4448-A5AF-C7B4D36B8CBC][Dust decoupling in H II regions]]) I went round in circles a bit
++ We need to find two things
+  1. Critical size of grain, above which RATD will break it up in a radiation field U
+  2. Check that timescale is less than R/v
++ Hoang:2018a Eq [27] gives min radiation field for disruption, which is steep function of size
+  + U_disr \approx 118 a_-5^-8.1 \lambda_0.5^5.1 S_9^1.5
++ We can re-write this to give a size limit
+  + a_-5 \approx 1.80 U^-0.123 \lambda_0.5^0.630 S_9^0.185
+  + Assume peak wavelength around 0.1 micron, and S = 1e10 instead of 1e9, then we get
+    + a_-5 \approx 1.00 U^-0.123
+  + We have U = 3.82 n T_4 \Xi, so putting \Xi = 1000 we get U = 3820 n
+    + a_-5 \approx 0.363 n^-0.123
+  + In outer parts of H II regions we have \Xi \sim 1 => U = 3.82 n
+    + maximum about 0.1 micron there
++ Check timescale
+  + From below I have
+    + t = 4.23e6 a_-5^-0.7 (\rho_d/3) S_9^0.5  \lambda_0.5^1.7 (U_6/1.2)^-1 \gamma^-1 s
+    + Put S_9 = 10, \lambda_0.5 = 0.3, then we have
+    + t = (6.57e4 yr) a_-5^-0.7 U^-1
+    + t = (17.2 yr) a_-5^-0.7 n^-1
+  + As before, the timescales are very short
+    + less than 100 years in all cases
++ *Conclusions for RATD*
+  + Any grain larger than 0.04 micron will be rapidly destroyed
+
+
 
 ** TODO Dust decoupling in H II regions
+:PROPERTIES:
+:ID:       59F20EBD-7A63-4448-A5AF-C7B4D36B8CBC
+:END:
 + Gail:1979a
   + Has decoupling due to low grain charge
 + Draine:2011a
@@ -2364,7 +2441,11 @@ Some of this will end up in introduction and/or discussion of Paper II
         - => column = 2.21 sqrt(L_4 n / \Xi_\dag) pc = 2.15e17 sqrt(L_4 n)
         - That probably needs to get multiplied by 1/sin\theta_B to account for the magnetically pinned lingering, which would make it consistent with what I got from the graphs
           - => 3.1e18, which is close enough to the 6e18 I got above
-      - *Conclusion* Sputtering not important
+      - *Conclusion* Sputtering only important for grains smaller than about a_\micro = 0.001 sqrt(L_4 n)
+        - We can combine this with other restrictions
+        - v_10 > sqrt(\eta_w \Xi_\dag)
+        - \tau_* > 0.5 \kappa/\kappa_d sqrt(\eta_w)
+        - \tau_* = 0.0089 κ_600 sqrt(L4 n) / v_10
 + Akimkin:2015a, Akimkin:2017a
   + In Akimkin:2017a they find that dust decouples from the gas in inner zone of H II region, allowing gas to fill in the hole that occurs in models that assume perfect coupling (Draine:2011a, Akimkin:2015a)
   + The decoupling is more pronounced for lower effective T, which is the equivalent of our finding that \Xi_\dag is lower for B stars than for O stars due to less effective grain charging.
