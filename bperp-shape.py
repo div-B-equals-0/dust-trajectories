@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from scipy.integrate import odeint
 from matplotlib import pyplot as plt
+import matplotlib.patheffects as PathEffects
 import seaborn as sns
 
 
@@ -18,6 +19,9 @@ def trajectory(tgrid, y0, ydot0=0):
 
 
 figfile = sys.argv[0].replace(".py", ".png")
+
+# White border for lines
+pe = [PathEffects.withStroke(linewidth=2, foreground="w")]
 
 y0max = 10.0
 ny0 = 4000
@@ -84,24 +88,24 @@ ax.imshow(H.T, origin='lower', extent=[xmin, xmax, ymin, ymax],
           vmin=0.0, vmax=3*H0, cmap='gray_r')
 
 
-ax.plot(-tgrid, yshape, lw=0.0)
+#ax.plot(-tgrid, yshape, lw=0.0)
 
-ax.plot(-p1(yext**2), yext, lw=0.5, ls="--")
-ax.plot(-p2(yext), yext, lw=0.5, ls="--")
+ax.plot(-p1(yext**2), yext, lw=1.5, ls="--")
+ax.plot(-p2(yext), yext, lw=1.5, ls="--")
 
 ax.axhline(0.0, color="k", alpha=0.5, lw=0.3)
 
-ax.plot(-p2(yext[j0]), yext[j0], "+", color="g", ms=4)
-ax.plot(-p1(0.0), 0.0, "+", color="orange", ms=4)
-ax.plot(0.0, 0.0, "*", color="r", ms=6)
+ax.plot(-p2(yext[j0]), yext[j0], "+", color="orange", ms=6)
+ax.plot(-p1(0.0), 0.0, "+", color="b", ms=6)
+ax.plot(0.0, 0.0, "*", color="r", ms=6, zorder=100,  path_effects=pe)
 
 for j in jsamples:
-    ax.plot(-tgrid, ystack[j, :], lw=0.3, color="k")
+    ax.plot(-tgrid, ystack[j, :], lw=1, color="k", path_effects=pe)
 
 #ax.legend(fontsize="small", ncol=2)
 
 ax.set_aspect("equal")
-ax.set(xlim=[-8.0, 1.5], ylim=[-1.2, 7.0],
+ax.set(xlim=[xmin, xmax], ylim=[ymin, ymax],
        xlabel="$x / R_{**}$", ylabel="$y / R_{**}$")
 sns.despine()
 fig.tight_layout()

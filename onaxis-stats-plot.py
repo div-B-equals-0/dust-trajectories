@@ -63,7 +63,7 @@ Rgbs = np.array(Rgbs)
 
 figfile = "figs/" + sys.argv[0].replace(
     ".py", f"-{STARSTRING}-{VSTRING}-{DUSTSTRING}.pdf")
-fig, ax = plt.subplots(figsize=(5, 4))
+fig, ax = plt.subplots(figsize=(4, 3.5))
 
 m = R0 > Rmin
 mlo = density < 1.0
@@ -72,7 +72,7 @@ ax.plot(density[m & mlo], R0[m & mlo], label="Wind bow shock")
 m = (1.5*Rmin > R0)
 ax.plot(density[m], Rmin[m], label="Dust wave")
 m = (1.5*Rmin > R0) & (Rsd < Rstarstar)
-ax.fill_between(density[m], Rmin[m], Red[m], color="orange", alpha=0.2)
+ax.fill_between(density[m], Rmin[m], Red[m], color="orange", alpha=0.4)
 m = Rgbs <= Rmin
 ax.plot(density[m], Rgbs[m], ls="--", label="Dust-free bow shock")
 m = R0 > Rmin
@@ -97,14 +97,15 @@ ax.text(1e-4, 0.22, r"$R_{**}$",
 ax.text(1e-4, 4e-4, r"$(\kappa / \kappa_\mathrm{d}) \, R_{**} $",
         ha="left", va="center", bbox=box_params)
 
+orange = (0.7, 0.35, 0.0)
 ax.text(1.0, 0.1, r"$R_{\ddag}$",
-        ha="left", va="center", color="orange",
+        ha="left", va="center", color=orange,
         path_effects=[PathEffects.withStroke(linewidth=3,
                                              alpha=0.7,
                                              foreground="w")],
         )
 ax.text(0.38, 0.04, r"$R_{\mathrm{min}}$",
-        ha="left", va="center", color="orange",
+        ha="left", va="center", color=orange,
         path_effects=[PathEffects.withStroke(linewidth=3,
                                              alpha=0.7,
                                              foreground="w")],
@@ -113,16 +114,16 @@ ax.text(0.38, 0.04, r"$R_{\mathrm{min}}$",
 default_title = f"{STARSTRING} {VSTRING} {DUSTSTRING}"
 fancy_title = {
     "MS10 v080 gra002":
-    r"$M = 10$ M$_\odot$   $v = 80$ km s$^{-1}$  $a = 0.02\ \mu$m   graphite ",
+    r"$M = 10$ M$_\odot$ $v = 80$ km s$^{-1}$ $a = 0.02\ \mu$m graphite ",
 }
-ax.text(1e-4, 8e-5, fancy_title.get(default_title, default_title),
-        ha="left", va="center", fontsize="small", bbox=box_params)
+ax.text(3e-5, 8e-5, fancy_title.get(default_title, default_title),
+        ha="left", va="center", fontsize="x-small", bbox=box_params)
 
 
 
 
 leg = ax.legend(loc="upper right", 
-                title="Bow variety")
+                title="Bow variety", fontsize="x-small")
 #leg.get_title().set_fontsize("small")
 
 ax.set(
