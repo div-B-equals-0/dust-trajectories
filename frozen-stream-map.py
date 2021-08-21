@@ -95,10 +95,10 @@ x1s = [2.8, 1.4, 0, -1.4, -2.8]
 # Bespoke collection of colors for the scatter shot grains at each x1 position
 colors = [
     # First batch at x=4 is separated from rest
-    # Pale yellow
-    (0.8, 0.8, 0.3, 1.0),
-    # Swing towards orange for next two at x=2 and x=0
-    (0.9, 0.7, 0.2, 1.0),
+    # Dark green
+    (0.2, 0.4, 0.2, 1.0),
+    # Red then orange for next two at x=2 and x=0
+    (0.6, 0.3, 0.2, 1.0),
     (1.0, 0.4, 0.1, 1.0),
     # Now we need a contrast - go more purple
     (0.7, 0.1, 0.4, 1.0),

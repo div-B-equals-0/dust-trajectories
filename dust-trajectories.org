@@ -2227,6 +2227,14 @@ bperp-ode.pdf
   time python frozen-stream-map.py MS10 40 1.0 gra 0.02 75 0.0 0.6
   time python frozen-stream-map.py MS10 80 1.0 gra 0.02 75 0.0 0.6
 #+END_SRC
++ Resultant files
+  + [[./frozen-stream-map-MS10-v080-n+10-gra002-th075-Z0000.pdf]] 
+  + [[./frozen-stream-map-MS10-v040-n+10-gra002-th075-Z0000.pdf]] 
+  + [[./frozen-stream-map-MS10-v080-n+10-gra002-th010-Z0000.pdf]] 
+  + [[./frozen-stream-map-MS10-v040-n+10-gra002-th010-Z0000.pdf]] 
++ Run times: from 45 sec to 77 sec - not so bad!
++ [2019-04-17 Wed] Redo these following Paper II referee suggestion to make the dots stand out better
+  + I changed the lighter colors to darker ones
 
 * Calculating radiative turnaround radius
 + For the well-coupled case, we have
